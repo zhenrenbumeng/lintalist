@@ -1,0 +1,1309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html lang="zh-CN">
+<head>
+<title>Lintalist - 文本扩展器、Snippet 管理器，支持可搜索的交互式文本复制粘贴、脚本运行，以及便于交换的 Bundle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="SHORTCUT ICON" href="favicon.ico" />
+<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+<meta name="description" content="Lintalist 管理可搜索的交互式文本，用于复制粘贴文本、运行脚本，并借助便于交换的 Bundle 工作——具备 Hotkey、全文搜索、Plugin 与脚本的文本扩展器" />
+<meta name="keywords" content="bundle, bundles, snippet, snippets, paste text, textpow, clipboard, searchable, search, autotext, auto-replace, template, clipboard, phrases, text, text substitution, text expander, text replacement, expand abbreviations, typing utility, trigger hotstrings, open source" />
+</head>
+<body id='top'>
+<div id='container'>
+<div id='intro'>
+<p style='color:#000;font-family:georgia;font-size:14px;line-height:150%;text-shadow: #fff 1px 1px 0px;' align='justify'>
+<span style='float:right;margin:0;padding:0;margin-top:10px;margin-right:100px;font-size:10px;color:#000;text-shadow: #eee 1px 1px 0px;'><a href='https://autohotkey.com/' style='color:#000;'><img src='img/poweredbyahk.png' alt='' border='0' style='padding-top:4px;' /></a></span>
+<img src='img/lintalist.png' alt='Lintalist' title='Lintalist' border='0' style='margin-left:-20px;padding-bottom:40px;' /><br clear='all' />
+<b>Lintalist</b> 允许你将文本存入 Bundle，并对它们进行（增量）<b>搜索</b>与<b>编辑</b>，再将所选文本<b>粘贴</b>到当前活动程序中。文本<b>可以</b>是交互式的：例如自动插入当前日期与时间、请求（基础）用户输入、从列表中选择等，最后还可<b>运行脚本</b>。你可以使用<b>键盘快捷键</b>或<b>缩写</b>来粘贴文本（或运行脚本），而无需打开搜索窗口。<br /><br />Snippet 支持格式化文本（HTML、Markdown、RTF 与图片），你也可以通过编写自己的 <b><a href='#InteractiveBundleText'>Plugin</a></b> 来<b>扩展</b> Lintalist。
+<br /><br />
+<span style='font-size:.8em;'><b>Lintalist</b> 是<b>开源</b>软件，使用 <a href='https://autohotkey.com/'>AutoHotkey</a> 开发，这是一种适用于 Windows、易学易用的脚本语言。
+<b>[Windows 7/8/10/11]</b> <span style='color:#666;'>（未在 WinXP(sp3)/Vista 下测试）</span><br /></span>
+<span class='date' style='float:right;display:inline;margin-top:0px;'>文档版本 20260405 | <a href="index.html">English</a></span></p>
+</div>
+
+<div class='column'>
+<p><b>程序</b></p>
+<ul>
+<li><a href='#Introduction'>简介</a></li>
+<li><a href='#Installing'>安装 Lintalist</a></li>
+<li><a href='#Searching'>开始搜索</a>
+  <ul>
+    <li><a href='#Omni'>OmniSearch（全局搜索）</a></li>
+    <li><a href='#ColumnSearch'>ColumnSearch（列搜索）</a></li>
+  </ul>
+</li>
+<li><a href='#Shortcuts'>使用快捷键</a>（Hotkey）</li>
+<li><a href='#Shorthand'>使用缩写</a>（Abbreviations）</li>
+<li><a href='#KeyboardShortcuts'>Lintalist 键盘快捷键</a></li>
+<li><a href='#TrayMenu'>托盘菜单</a></li>
+<li><a href='#Configuration'>配置</a><ul>
+<li><a href='#Configuration-MultiCaret'>MultiCaret（多光标）</a></li>
+<li><a href='#Configuration-AltPaste'>AltPaste（替代粘贴）</a></li>
+<li><a href='#Configuration-Linefeed'>Linefeed（换行符）</a></li>
+<li><a href='#Configuration-AfterPaste'>AfterPaste（粘贴后操作）</a></li>
+<li><a href='#Configuration-ScriptTemplates'>脚本模板</a>（右键菜单）</li>
+<li><a href='#Configuration-AdditionalTools'>附加工具</a>（菜单）</li>
+<li><a href='#Configuration-SnippetEditor'>附加编辑器</a>（Snippet 编辑器）</li>
+<li><a href='#Configuration-Themes'>主题</a></li>
+<li><a href='#Configuration-nvda'>NVDA</a></li>
+</ul></li>
+<li><a href='#cmdline'>命令行参数</a></li>
+<li><a href='#FAQ'>常见问题和已知问题</a></li>
+<li><a href='#Expert'>高级选项</a></li>
+<li><a href='#Linux'>Linux</a></li>
+<li><a href='#History'>历史记录</a>（更新日志）</li>
+</ul>
+
+</div>
+
+<div class='column'>
+<p><b>Bundle</b></p>
+<ul>
+<li><a href='#LintalistBundles'>Lintalist Bundle 简介</a></li>
+<li><a href='#SnippetsBundles'>Snippet 与 Bundle</a><ul>
+<li><a href='#InteractiveBundleText'>Plugin</a>（使用方法）</li>
+<li><a href='#Script'>脚本</a></li>
+<li><a href='#Functions'>函数</a></li>
+</ul></li>
+<li><a href='#FormattedText'>格式化文本 Snippet</a></li>
+<li><a href='#Editing'>编辑 Bundle 与 Snippet</a></li>
+<li><a href='#ManagingBundles'>管理 Bundle</a></li>
+<li><a href='#LoadAllBundles'>加载所有 Bundle</a>（通过托盘菜单）</li>
+<li><a href='#ReloadBundles'>重新加载 Bundle</a>（通过托盘菜单）</li>
+</ul>
+<br />
+<p><b>反馈</b></p>
+
+<ul>
+<li><a href='https://github.com/lintalist/lintalist/'>GitHub Issues 与 Discussions</a> <span class='discussion'></span>（推荐）</li>
+<li><a href='https://autohotkey.com/boards/viewtopic.php?f=6&amp;t=3378'>AutoHotkey 论坛</a>（允许游客发帖）</li>
+<li><a href='http://www.portablefreeware.com/index.php?id=2686'>Portablefreeware.com</a></li>
+<li><a href='http://www.donationcoder.com/forum/index.php?topic=41475.0'>Donationcoder.com</a></li>
+</ul>
+
+<br />
+<p>Lintalist <b>Bundle 仓库</b>：<br />
+<a href='https://github.com/lintalist/lintalist-bundles/'>github.com/lintalist/lintalist-bundles/</a></p>
+
+<p>&#127912; Lintalist <b>主题</b>：<br />
+<a href='https://github.com/lintalist/lintalist-themes'>github.com/lintalist/lintalist-themes</a></p>
+
+<p>&#128250; <b>视频教程：</b><br />
+<a href="http://youtu.be/XfjZPAhHB8c">综合介绍</a>；
+<a href="http://youtu.be/Q6SFkttjUQk">HTML/MD</a>；
+<a href="http://youtu.be/J1StUarGHmI">格式化文本</a>；以及
+<a href="http://youtu.be/Rtd_ChyRVkM">Plugin</a></p>
+
+</div>
+
+<div class='column'>
+<p><b>下载 Lintalist <em>1.9.27</em></b>
+<p>
+<a href='https://github.com/lintalist/lintalist/releases'><img src='img/lintalist65x65.gif' alt='下载 Lintalist' width='65' align='left' border='0' style='margin-right: 5px;' /></a>
+下载（含源码）：<br />
+<a href='https://github.com/lintalist/lintalist/releases'><b>最新版本</b></a>（lintalist64.zip，约 1MB）<br />解压后运行 lintalist.ahk 或 lintalist.exe 即可<br />
+</p>
+
+<span class='tip' style="margin-bottom:10px;"><img src="img/usb.png" width=50 align=right title="USB 图标 by Alessandro Rei (GNU/GPL) - http://findicons.com/icon/255067/usb?id=256158">Lintalist 是一款<b>便携应用</b>。它将所有设置与 Bundle 存储在程序所在文件夹中。<a href="#portable">更多信息…</a>
+</span>
+
+<p><b>Lintalist</b> 源代码：<br />
+<a href='https://github.com/lintalist/lintalist/'>github.com/lintalist/lintalist</a></p>
+
+<p><b>媒体评测</b></p>
+<ul>
+<li><a href='http://alternativeto.net/software/lintalist/'>AlternativeTo</a>（英文）&#x2197;</li>
+<li><a href='https://www.softpedia.com/get/Office-tools/Other-Office-Tools/Lintalist.shtml'>Softpedia.com</a>（英文）&#x2197;</li>
+<li><a href='https://www.majorgeeks.com/files/details/lintalist.html'>MajorGeeks.com</a>（英文）&#x2197;</li>
+<li><a href='https://www.ghacks.net/2020/02/21/lintalist-is-an-open-source-snippet-manager-for-windows/'>Ghacks.com</a>（英文）&#x2197;</li>
+<li><a href='https://www.freewarefiles.com/Lintalist_program_109453.html'>Freewarefiles.com</a>（英文）&#x2197;</li>
+<li><a href='https://www.filecroco.com/download-lintalist/'>filecroco.com</a>（英文）&#x2197;</li>
+<li><a href='http://www.ilovefreesoftware.com/25/windows/free-text-expander-tool-enter-snippets-according-to-active-program.html'>ilovefreesoftware.com</a>（英文）&#x2197;</li>
+<li><a href='https://itigic.com/lintalist-an-alternative-to-the-windows-clipboard/'>itigic.com</a>（英文）&#x2197;（<a href='https://itigic.com/pt/lintalist-an-alternative-to-the-windows-clipboard/'>葡萄牙文</a>）&#x2197;</li>
+<li><a href='https://www.libellules.ch/dotclear/index.php?post/2018/10/31/Lintalist-gestionnaire-des-extraits-de-texte'>libellules.ch</a>（法文）&#x2197;</li>
+<li><a href='http://www.bchari.com/2019/03/lintalist.html'>bchari.com</a>（日文）&#x2197;</li>
+<li><a href='https://computertotaal.nl/artikelen/apps-software/dit-zijn-de-beste-freeware-tips-van-februari-2020/#rs-1582032317595'>computertotaal.nl</a>（荷兰文）&#x2197;</li>
+<li><a href='https://videotanfolyam.hu/blog/2081/Lintalist_gyorsabb_es_kevesebb_gepeles_elore_megirt_szovegek_hasznalataval'>videotanfolyam.hu</a>（匈牙利文）&#x2197;</li>
+</ul>
+</div>
+
+<div class='brk'></div>
+
+<pre id='content'>
+<h2 id='Introduction'><a href='#Introduction' class='headline'>简介</a></h2>
+
+如前所述，Lintalist 允许你将文本存入 Bundle，并对它们进行（增量）<b>搜索</b>与<b>编辑</b>，再将所选文本<b>粘贴</b>到当前活动程序中。
+
+这些文本、快捷键、缩写与脚本统称为 <b>Snippet</b>，它们保存在所谓的 <b>Bundle</b> 中。Bundle 是简单的文本文件，因此易于理解、维护，也便于在用户之间交换。
+
+Bundle 具有<b>上下文感知</b>能力：根据当前活动窗口的<b>（部分）标题</b>，程序会尝试加载一个或多个匹配的 Bundle，从而让你在不同应用程序与文件中使用相同的快捷键与 Shorthand，更加灵活。你不必记住或使用任何快捷键或缩写，因为随时可以通过打开搜索窗口来<b>搜索 Bundle</b>。把它当作一款文本扩展器：能省下大量按键，并提供诸多附加功能：Hotkey、全文搜索、Plugin 与脚本。
+有人也会把它比作许多文本编辑器里的「标签列表」或「剪贴库」。
+
+<span class='tip'>Bundle 与 Snippet 可使用 <a href='#Editing'>Lintalist Bundle 与 Snippet 编辑器</a>编辑，也可以在你偏好的文本编辑器中编辑。</span>
+
+例如：若正在编辑 HTML 文件，Lintalist 可同时使用 HTML 与 CSS 的 Bundle；若正在编辑 CSS 文件，则只加载 CSS Bundle。因此在 HTML 文件中，快捷键 <strong>Ctrl+B</strong> 可在光标处插入 <strong>&lt;strong&gt;&lt;/strong&gt;</strong>（或将标签套在选中文本外）；而在编辑 CSS 文件时，快捷键 <strong>Ctrl+B</strong> 可在光标处插入 <strong>font-style: bold;</strong>。若在多个活动 Bundle 中找到同一快捷键，会弹出菜单供你选择要使用的 Snippet 与 Bundle。
+
+<b>注意：</b>虽然 Lintalist 可以展开缩写，但并不旨在复制或取代 AutoHotkey 原生的 Hotstrings 功能；选项说明请参阅 <a href='https://www.autohotkey.com/docs/v1/Hotstrings.htm'>autohotkey.com/docs/v1/Hotstrings.htm</a>。
+
+<span class='tip'>若觉得不便，可编辑某个 Snippet 并更改其快捷键或 Shorthand。</span>
+本程序使用 AutoHotkey 编写；AutoHotkey 是适用于 Windows 的免费、开源（脚本）工具。更多信息见 <a href='https://autohotkey.com/'>autohotkey.com</a>。
+
+<span class='tip' id='portable' style='width:250px;float:right;margin:10px;margin-top:40px;border-top:3px dashed #FCDC3B;border-bottom:3px dashed #FCDC3B;background-color:#FFF8DC;' ><img src="img/usb.png" width=50 align=right title="USB 图标 by Alessandro Rei (GNU/GPL) - http://findicons.com/icon/255067/usb?id=256158">Lintalist 是一款<b>便携应用</b>。它将所有设置与 Bundle 存储在程序所在文件夹中。
+
+首次运行时会询问是否在桌面创建快捷方式或随 Windows 启动，但你可以不做这些设置。也可以从 U 盘或 Dropbox 等位置直接运行。
+
+若要随身携带 Lintalist，只需复制整个 Lintalist 文件夹；备份同理。
+</span>
+<h3 id='FeatureList'><a href='#FeatureList' class='headline'>完整功能列表：</a></h3>
+
+- 使用四种搜索模式的全文 Snippet 搜索
+- 上下文感知的 Bundle
+- 为常用 Snippet 设置缩写（AutoHotkey 术语中为 Hotstrings）
+- 为常用 Snippet 设置快捷键（AutoHotkey 术语中为 Hotkey）
+- 运行（AutoHotkey）脚本
+- 本地变量（用户专属）
+- Bundle 转换器（简单列表、CSV、UltraEdit、Texter）
+- 便携应用
+- Plugin 易于开发，默认包含：
+  - 粘贴后将光标移回文本中的指定位置
+  - 插入日期与时间（含日期与时间运算）
+  - 日历
+  - 用户输入
+  - 从列表中选择项目
+  - 使用剪贴板内容
+  - 使用选中的文本
+  - 计数器（可即时创建）
+  - 链接 Snippet（将一个 Snippet 的文本插入另一个）
+  - 从文件插入文本
+  - 数学运算（Calc）
+  - 随机选择
+  - 拆分并复用文本
+  - 使用 HTML、Markdown、RTF 与图片的格式化文本
+
+<h2 id='Installing'><a href='#Installing' class='headline'>安装 <em>Lintalist</em></a></h2>
+
+安装 Lintalist 很简单：下载 ZIP 并解压到你选择的文件夹。请确保目标文件夹可写（例如不要解压到 “C:\Program Files” 这类目录）。放在「我的文档」下通常最省事，这样在使用时 Lintalist 也更容易更新你的 Bundle。Lintalist 完全便携，不会向注册表写入设置，因此可直接从 U 盘或 Dropbox 文件夹等位置运行。
+
+若你已安装 AutoHotkey，建议运行 <b>Lintalist.ahk</b>，这样会使用你本机偏好的 AutoHotkey 版本运行 Lintalist（推荐 v1.1.37.02）。若未安装 AutoHotkey，可直接启动 <b>Lintalist.exe</b>。
+
+<b>说明：</b>
+- Lintalist.exe：重命名后的 AutoHotkey.exe（v1.1.37.02 32/64 位 Unicode，见 https://autohotkey.com/ 与/或 https://autohotkey.com/download/）
+- Lintalist.ahk：程序的实际（主）源代码（见 https://github.com/lintalist/lintalist）
+
+Scoop：<a href='https://scoop.sh/#/apps?q=lintalist'>https://scoop.sh/#/apps?q=lintalist</a>（未测试，不提供支持）
+
+<h2 id='Searching'><a href='#Searching' class='headline'>常规使用：启动 Lintalist 并搜索 Snippet</a></h2>
+
+若 Lintalist 正在运行，可按 <kbd>CAPSLOCK</kbd>（默认 Hotkey）激活搜索窗口。可在托盘图标 <img src="img/lintalist65x65.gif" width="14" height="14" border="0" alt="lintalist 图标" style="vertical-align:middle" > 上右键打开配置菜单以更改该 Hotkey。
+
+根据活动程序标题，会有一个或多个 Bundle 加载到搜索窗口，随后即可开始搜索：
+
+<span class='small'>Lintalist 搜索窗口：</span>
+<img src='img/lintalist-search.png' alt='Lintalist 搜索窗口，已加载 xhtml bundle' style='max-width:100%;' />
+<span class='small'>1：输入查询。
+2：菜单与搜索选项。
+3：结果列表，含 Part1、Part2、Key（键盘快捷键）、Short（缩写）。列为动态：若已加载的 Bundle 中不存在 Part2、Key 或 Short，则不显示对应列。
+4：最上方或所选 Snippet 文本的预览。状态栏显示：已加载的 Bundle，以及命中数 / Snippet 总数。</span>
+
+<span class='tip'>若在 Lintalist 搜索窗口已激活时再次按同一 Hotkey，会在宽视图与窄视图之间切换。可在配置菜单中分别设置两种视图的宽度与高度。</span>
+
+输入时结果数量会减少（即增量搜索或快速过滤）。小图标表示纯文本 Snippet <img src='img/texticon.gif' alt='Lintalist 文本 Snippet' style='display:inline;margin-bottom:-3px;' />，或会实际运行脚本的 Snippet <img src='img/scripticon.gif' alt='Lintalist 脚本 Snippet' style='display:inline;margin-bottom:-2px;' />。可在配置菜单中开关图标（<span class='setting'>ShowIcons</span>），也可通过排序选项影响结果顺序（见 <span class='setting'>SortByUsage</span> 与 <span class='setting'>ColumnSort</span>）。
+
+在结果列表中选中一项后按 <kbd>ENTER</kbd>，默认将文本（Part1）粘贴到活动程序（见上文说明）。若未用方向键选择其他项，<kbd>SHIFT</kbd>+<kbd>ENTER</kbd> 与 <kbd>ENTER</kbd> 均作用于列表中的第一项。根据 Snippet 不同，会粘贴文本或运行脚本（见上文说明）。
+若只想将 Snippet 复制到剪贴板而不粘贴：按 <kbd>Alt</kbd>+<kbd>ENTER</kbd> 复制 Part1，按 <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>ENTER</kbd> 复制 Part2。
+
+也可用 <kbd>Up</kbd> 与 <kbd>Down</kbd> 在列表中移动。可通过 Bundle 菜单选择其他 Bundle 或加载所有 Bundle。若从 Bundle 菜单（<kbd>Alt</kbd>+<kbd>b</kbd>）选择某个 Bundle，该 Bundle 将被<b style='color:#c00;'>锁定</b>（工具栏图标：<img src='img/locked.ico' width='18' height='18' alt='锁定图标' style="vertical-align:middle" />），并一直保持激活，直到你解锁（<kbd>Alt</kbd>+<kbd>l</kbd>，字母 l）。
+若启用该功能，可使用 <kbd>Alt</kbd>+<kbd>1..0</kbd> 快速选择前十个搜索结果。
+
+<span class='tip'>（双击）点击列表项时的行为由配置菜单中的设置决定。（<span class='setting'>SingleClickSends</span> 与 <span class='setting'>DoubleClickSends</span>）</span>
+
+<b id='default-bundle'><a href='#SearchOptions' class='headline'>默认 Bundle</a></b>：另有始终加载的默认 Bundle——除非你锁定了特定 Bundle——这样在每个程序中都有通用 Snippet 可用。
+
+<span class='tip'>若不需要上下文感知的 Bundle，只需使用默认 Bundle 并将所有 Snippet 放入其中。此时也可锁定默认 Bundle，但通常无此必要。</span>
+
+<h3 id='SearchOptions'><a href='#SearchOptions' class='headline'>搜索选项：</a></h3>
+
+可用以下四种方式在 Bundle 中搜索文本：
+
+<table>
+<thead>
+<tr>
+	<th>方法</th>
+	<th>说明</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td><b><span style='text-decoration:underline;'>R</span>glr</b></td><td><kbd>Alt</kbd>+<kbd>r</kbd> 为常规或普通搜索：你输入的文本必须被原样匹配。
+  示例：
+  输入 'searching text' 可找到 '<b style='color:#c00;'>searching text</b>'，但不会找到 'searching for text'</td></tr>
+
+<tr><td><b>F<span style='text-decoration:underline;'>z</span>zy</b></td><td><kbd>Alt</kbd>+<kbd>z</kbd> 为模糊搜索：你输入的文本可在任意位置被匹配，从而更灵活地缩小结果范围。
+  示例：
+  输入 'sea tex' 可找到 '<b style='color:#c00;'>sea</b>rching <b style='color:#c00;'>tex</b>t'，也可找到 '<b style='color:#c00;'>sea</b>rching for <b style='color:#c00;'>tex</b>t' 或 '<b style='color:#c00;'>tex</b>t about the <b style='color:#c00;'>sea</b>'</td></tr>
+  
+<tr><td><b>RgE<span style='text-decoration:underline;'>x</span></b></td><td><kbd>Alt</kbd>+<kbd>x</kbd> 为正则表达式搜索（Perl 兼容，PCRE），可按模式搜索。
+  示例：se\w*g 可找到 '<b style='color:#c00;'>searching</b>'、'<b style='color:#c00;'>sewing</b>' 等。
+  详见 <a href='https://www.autohotkey.com/docs/v1/commands/RegExMatch.htm'>autohotkey.com/docs/v1/commands/RegExMatch.htm</a>
+  关于用正则搜索的说明。[RgEx 搜索的补充说明见下文；
+  并非所有正则都能得到预期结果]</td></tr>
+<tr><td><b><span style='text-decoration:underline;'>M</span>agc</b></td><td><kbd>Alt</kbd>+<kbd>m</kbd> 为魔法搜索（类似 QuickSilver——实验性功能）
+  示例：
+  输入 'sax' 可找到 '<b style='color:#c00;'>s</b>e<b style='color:#c00;'>a</b>rching te<b style='color:#c00;'>x</b>t'</td></tr>
+
+</tbody>
+</table>
+
+<b id='case-sensitive'><a href='#case-sensitive' class='headline'>大小写（不）敏感搜索</a></b>
+  
+使用 Case <kbd>Alt</kbd>+<kbd>c</kbd> 可使搜索区分大小写。
+
+在搜索结果下方的区域中，可看到 Bundle 中当前活动条目的预览（默认为 Part1，也可通过配置菜单与 settings.ini 更改）。
+
+状态栏显示已加载哪些 Bundle，以及在全部条目中找到多少条。
+
+你可以控制搜索结果的最大数量，以及结果列表中可见 Snippet 的最大数量。
+
+<h3 id='SearchSnippets'><a href='#SearchSnippets' class='headline'>搜索 Snippet 的哪些部分？</a></h3>
+
+程序会在 <b>Part1</b>、<b>Part2</b> 与 <b>Shorthand</b> 中查找匹配（不会搜索快捷键与脚本代码）。为在结果列表中显示更易读文本，若 Part1 与 Part2 为多行，其展示方式会有所不同：
+
+换行替换为 <b>\n</b>，制表符替换为 <b>\t</b>，搜索针对<b>这些文本</b>而非原始多行内容（粘贴时仍使用原始文本；多看几次实际操作即可习惯）。
+
+<h3 id='RegExCase'><a href='#RegExCase' class='headline'>RegEx 与大小写敏感搜索</a></h3>
+
+<span style='color:#c00;'>&lt;技术细节&gt;</span> 若<b>大小写复选框</b>未勾选，搜索不区分大小写。使用 RegEx 搜索时，会在搜索每个 Snippet 之前自动为正则插入 "i)" 选项。若你为 RegEx 搜索传入其他选项，可能导致意外结果。
+
+示例：不区分大小写的 RegEx 'se\w*g' 在搜索时实际使用 'i)se\w*g'。这样更省事（否则每次不区分大小写都要输入 i)，而 RegEx 默认区分大小写）。若要传入额外选项，建议开启大小写敏感，再按此处说明添加所需选项：<a href='https://www.autohotkey.com/docs/v1/commands/RegExMatch.htm#Options'>autohotkey.com/docs/v1/commands/RegExMatch.htm#Options</a>。此行为在 Lintalist 未来版本中可能变更。<span style='color:#c00;'>&lt;/技术细节&gt;</span>
+
+<b id='searchlv'><a href='#searchlv' class='headline'>搜索字母变体</a></b>
+
+有时搜索文本中含有带重音的字母，输入可能困难或较慢。将这些字母的变体加入搜索串后，可搜索 'cafe' 仍匹配 'café'。因此查询中的 'e' 会扩展为搜索 'eéèêḙěĕẽḛẻėëēȩęᶒɇȅếềễểḝḗḕȇẹệæǽǣœᵫ'。
+启用后，所有搜索模式都会使用正则表达式（常规与模糊）。
+可通过搜索界面中的 <i>L<u>v</u></i> 按钮（<kbd>Alt</kbd>+<kbd>v</kbd>）或配置菜单中的 <span class='setting'>SearchLetterVariations</span>（取消）启用。
+更多说明见 'include\LetterVariations.ahk' 中的注释。
+
+<h3 id='Omni'><a href='#Omni' class='headline'><em>Omni</em>Search（搜索所有 Bundle）</a></h3>
+
+默认只在已加载的 Bundle 中搜索，也可用以下方式在所有 Bundle 中搜索：
+
+<b>1. 加载所有 Bundle</b>
+
+可加载全部 Bundle：
+
+- 使用托盘菜单，选择「加载所有 Bundle」，再打开搜索界面；或
+- 打开搜索界面，Bundle 菜单第一项：加载所有 Bundle
+
+缺点是也会设置锁定状态，因此下次打开搜索界面时仍会在所有 Bundle 中搜索，需手动解锁。
+
+<b>2. OmniSearch 查询</b>
+
+当查询以预定义字符开头（默认为 <b style='color:#c00;'>@</b>）时，Lintalist 会在所有 Bundle 中搜索，不受当前已加载或锁定的 Bundle 限制。可在设置中定义该字符（OmniChar）。若不想在输入查询时使用 OmniSearch，在设置菜单中清空 OmniChar 即可禁用。
+
+查询：state -> 在当前已加载的 Bundle 中查找 "state"
+查询：<b style='color:#c00;'>@</b>state -> 在所有 Bundle 中查找 "state"
+
+<b>3. OmniSearch 快捷键</b>
+
+- 搜索界面激活时：按 <kbd>F2</kbd> 切换 OmniSearch。
+- 按 <kbd>Ctrl</kbd>+<kbd>Capslock</kbd> 时，搜索界面以 OmniSearch 模式打开（提示：用 <kbd>F2</kbd> 切换）。可在设置中定义该 Hotkey：<span class='setting'>StartOmniSearchHotkey</span>
+
+注意：使用选项 2 与 3 时，结果更新后状态栏（右下角）会附加文本 "(All)"，表示正在使用 OmniSearch。
+
+<h3 id='ColumnSearch'><a href='#ColumnSearch' class='headline'><em>Column</em>Search（搜索 Snippet 的特定部分）</a></h3>
+
+默认情况下，Lintalist 会在 Snippet 的 <em>Part1、Part2</em> 与 <em>Shorthand</em> 中<a href='#SearchSnippets'>搜索</a>匹配。
+
+当查询以数字（1 到 6）开头，后接预定义字符（默认为 <b style='color:#c00;'>&lt;</b>，设置中为 <span class='setting'>ColumnSearchDelimiter</span>）时，Lintalist 只在 Snippet 的特定部分中搜索。要禁用此功能，请在设置中清空 <span class='setting'>ColumnSearchDelimiter</span>。
+
+查询：state -> 在 Snippet 的 Part1、Part2 与 Shorthand 中查找 "state"
+查询：1<b style='color:#c00;'>&lt;</b>state -> 仅在 Snippet 的 <b>Part1</b> 中查找 "state"
+
+1 到 5 对应 Snippet 的<a href="#SnippetsBundles">「部分」或「区段」</a>（6 对应 Bundle 名称与描述，若有）：
+
+1&lt; Part1
+2&lt; Part2
+3&lt; Shortcut（快捷键）
+4&lt; Shorthand（缩写）
+5&lt; Script（脚本）
+6&lt; Bundle 名称与描述
+
+在查询开头加上 OmniSearch 字符可与 ColumnSearch 组合（例如 <b style='color:#c00;'>@</b>1<b style='color:#c00;'>&lt;</b>state）
+
+<h3 id='lockedbundles'><a href='#lockedbundles' class='headline'><em>锁定</em> Bundle 与 TitleMatch</a></h3>
+
+默认情况下，Bundle 使用 TitleMatch 属性决定使用哪些 Snippet。要始终使用特定 Bundle：
+
+1. 始终使用所有 Bundle——见<a href='#LoadAllBundles'>加载所有 Bundle</a>
+2. 从 Bundle 菜单加载特定 Bundle。
+3. 使用<b style='color:#c00;'>锁定</b>工具栏图标：<img src='img/locked.ico' width='18' height='18' alt='锁定图标' style="vertical-align:middle" />，或快捷键 <kbd>Alt</kbd>+<kbd>l</kbd>
+
+另见 <a href='#faq5'>FAQ 5</a>。
+
+<h2 id='Shortcuts'><a href='#Shortcuts' class='headline'>使用<em>快捷键</em>（Hotkey）</a></h2>
+
+若 Snippet 定义中包含快捷键，且该 Snippet 属于当前活动的 Bundle，可在不激活 Lintalist 搜索窗口的情况下，通过按下 Hotkey 插入 <b>Part1 的文本</b>或<b>运行脚本</b>。Lintalist 搜索窗口激活时，快捷键被禁用。
+
+<span class='tip'>可通过托盘菜单或搜索窗口工具栏中的按钮启用/禁用快捷键</span>
+
+<h2 id='Shorthand'><a href='#Shorthand' class='headline'>使用<em>缩写</em>（Abbreviations）</a></h2>
+
+若 Snippet 定义中包含 Shorthand，且该 Snippet 属于当前活动的 Bundle，可在不激活 Lintalist 搜索窗口的情况下，通过输入缩写后按 <b>Space</b> 或 <b>Tab</b> 插入 <b>Part1 的文本</b>或<b>运行脚本</b>。Lintalist 搜索窗口激活时，Shorthand 被禁用。
+
+<span class='tip'>可通过托盘菜单或搜索窗口工具栏中的按钮启用/禁用 Shorthand</span>
+
+<h2 id='KeyboardShortcuts'><a href='#KeyboardShortcuts' class='headline'>Lintalist 键盘<em>快捷键</em></a></h2>
+
+除 Bundle 中定义的 Hotkey 外，Lintalist 还有两套通用 Hotkey：一套在后台等待时使用，一套在搜索窗口激活时使用。打开搜索窗口：按 <kbd>CAPSLOCK</kbd>（默认设置）
+
+搜索窗口未激活时的快捷键
+<table>
+<thead>
+<tr>
+	<th width="20%">按键</th>
+	<th width="80%">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><b><kbd>Capslock</kbd>        </b></td><td>开始搜索（打开 Lintalist 搜索窗口，可在配置中更改，<span class='setting'>StartSearchHotkey</span>）。若搜索窗口已激活，则在宽视图与窄视图之间切换。
+另有设置可用同一按键隐藏搜索窗口：<span class='setting'>StartSearchHotkeyToggle</span>。</td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>Capslock</kbd></b></td><td>以 <a href="#Omni">OmniSearch</a> 模式开始搜索（打开 Lintalist 搜索窗口，可在配置中更改）。</td></tr>
+<tr><td><b><kbd>Winkey</kbd>+<kbd>z</kbd></b></td><td>开始<a href="#QuickSearchHotkey">快速搜索</a></td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>Winkey</kbd>+<kbd>q</kbd></b></td><td>退出 Lintalist</td></tr>
+</tbody>
+</table>
+
+<b>Lintalist 搜索窗口激活时</b>
+
+<table>
+<thead>
+<tr>
+	<th width="20%">按键</th>
+	<th width="80%">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><b><kbd>Esc</kbd></b></td><td>关闭/隐藏搜索窗口                          </td></tr>
+<tr><td><b><kbd>Up</kbd>、<kbd>Down</kbd></b></td><td>在结果中滚动，NumpadUp 与 NumpadDown 也可用。</td></tr>
+<tr><td><b><kbd>Enter</kbd></b></td><td>粘贴找到的文本（Part1）或运行脚本 *1      </td></tr>
+<tr><td><b><kbd>Shift</kbd>+<kbd>Enter</kbd></b></td><td>粘贴找到的文本（Part2）或运行脚本 *1      </td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>Enter</kbd></b></td><td>粘贴找到的文本（Part1）且不运行脚本 </td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd></b></td><td>粘贴找到的文本（Part2）且不运行脚本 </td></tr>
+<tr><td><b><kbd>Alt</kbd>+<kbd>Enter</kbd></b></td><td>将文本（Part1）复制到剪贴板 *2 </td></tr>
+<tr><td><b><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd></b></td><td>将文本（Part2）复制到剪贴板 </td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd></b></td><td>将 Part1 与 Part2 合并为一段文本进行粘贴或复制到剪贴板（见 <span class='setting'>BothParts*</span> 设置），且不运行脚本</td></tr>
+<tr><td><b><kbd> F2 </kbd></b></td><td>OmniSearch（切换）<a href="#Omni">搜索所有 Bundle</a></td></tr>
+<tr><td><b><kbd> F4 </kbd></b></td><td>编辑 Snippet                                    </td></tr>
+<tr><td><b><kbd> F5 </kbd></b></td><td>复制 Snippet 并编辑（当前 Bundle）          </td></tr>
+<tr><td><b><kbd> F6 </kbd></b></td><td>将 Snippet 移动到另一个 Bundle                  </td></tr>
+<tr><td><b><kbd> F7 </kbd></b></td><td>添加新 Snippet                                 </td></tr>
+<tr><td><b><kbd> F8 </kbd></b></td><td>删除 Snippet                                  </td></tr>
+<tr><td><b><kbd> F10 </kbd></b></td><td>Bundle 属性                              </td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>1..5</kbd></b></td><td>1：按 Part1 排序（切换）
+2：按 Part2 排序（切换）
+3：按 Shorthand 排序（切换）
+4：按 Key 排序（切换）
+5：按 Bundle 名称排序（切换）
+
+即使列不可见，排序仍生效——例如若未在搜索结果中显示 Bundle 名称（见 DisplayBundle），仍可对其排序。</td></tr>
+<tr><td><b><kbd>Alt</kbd>+<kbd>1..0</kbd></b></td><td>可用 <kbd>Alt</kbd>+<kbd>1</kbd> 到 <kbd>Alt</kbd>+<kbd>0</kbd> 选择前十个搜索结果。使用非 "NoSort" 的 ColumnSort 时，视觉提示将被禁用。
+可通过 <span class='setting'>ShortcutSearchGui</span> 设置（配置）禁用。
+注意：<kbd>Alt</kbd>+<kbd>1..0</kbd> 也可在 <code>[[Choice]]</code> Plugin 的「按数字选择」功能中使用。
+</td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>t</kbd></b></td><td>切换搜索窗口置顶开关。（每个搜索实例独立）</td></tr>
+<tr><td><b><kbd>Ctrl</kbd>+<kbd>f</kbd></b></td><td>将焦点置于搜索框。</td></tr>
+<tr><td><b><kbd>Tab</kbd></b></td><td>将焦点置于搜索结果（列表视图）——对 NVDA 等屏幕阅读器很有用。</td></tr>
+</tbody>
+</table>
+
+*1 - 若脚本已暂停，则脚本（若有）不会运行，而是发送文本
+   - 单击或双击左键的行为可在配置菜单中定义
+     （<span class='setting'>SingleClickSends</span> 与 <span class='setting'>DoubleClickSends</span>）
+
+*2 也可通过其他方式将所选 Snippet 放入剪贴板，详见 plugins\readme-howto.txt 中 "Extending Snippet processing" 一节
+
+<b>Lintalist Plugin</b>
+
+<table>
+<thead>
+<tr>
+	<th width="20%">按键</th>
+	<th width="80%">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><b><kbd>Ins</kbd></b></td><td>在使用 <code>[[Input]]</code> 与 <code>[[Choice]]</code>（含搜索选项）时，将搜索查询插入输入控件。<span class='discussion'></span><a href='https://github.com/lintalist/lintalist/discussions/280'>Discussion @ GH - #280</a></td></tr>
+<tr><td><b><kbd>F3</kbd></b></td><td><code>[[FileList/Choice]]</code>：若 FileList 返回完整路径，则切换预览窗口以查看图片。若 Choice 中某项看似有效路径（a-z:\），则自动打开预览窗口。（亦支持有限数量的文本格式：txt, md, html, css, ahk, cmd）<span class='discussion'></span><a href='https://github.com/lintalist/lintalist/issues/239'>Discussion @ GH - #239</a></td></tr>
+</tbody>
+</table>
+
+<h2 id='TrayMenu'><a href='#TrayMenu' class='headline'>托盘<em>菜单</em></a></h2>
+
+- <a href='#LoadAllBundles'>加载所有 Bundle</a>
+- <a href='#Configuration'>配置</a>
+- <a href='#ReloadBundles'>重新加载 Bundle</a>
+- <a href='#Pause'>暂停 Lintalist</a>
+- <a href='#Pause'>暂停快捷键</a>
+- <a href='#Pause'>暂停缩写</a>
+- <a href='#Pause'>暂停脚本</a>
+- <a href='index_cn.html'>帮助</a>
+- 退出
+
+<h3 id='LoadAllBundles'><a href='#LoadAllBundles' class='headline'>加载所有 <em>Bundle</em></a></h3>
+
+你可以通过托盘菜单或搜索窗口中的 Bundle 菜单（<kbd>Alt</kbd>+<kbd>b</kbd>）让 Lintalist 加载所有 Bundle。加载全部 Bundle 后会自动进入锁定状态，直到你从 Bundle 菜单选择某个特定 Bundle，或在搜索窗口中解锁（<kbd>Alt</kbd>+<kbd>l</kbd>）。
+
+<h3 id='ReloadBundles'><a href='#ReloadBundles' class='headline'>重新加载 <em>Bundle</em></a></h3>
+
+如果你新增、删除或修改了 Bundle，需要重新加载全部 Bundle，确保它们被读入内存。这样搜索、新增或修改后的快捷键与缩写才能正确生效。
+
+<h3 id='Pause'><a href='#Pause' class='headline'>暂停</a></h3>
+
+你可以完全暂停 Lintalist，也可以分别暂停 Shortcuts、Shorthand 与 Scripts。注意：在搜索窗口中选中 Snippet 时，也可以用 Ctrl-Enter 或 Ctrl-Shift-Enter 绕过脚本，只发送文本，详见 <a href='#KeyboardShortcuts'>Lintalist 键盘快捷键</a>。
+
+<h2 id='Configuration'><a href='#Configuration' class='headline'>配置</a></h2>
+
+你可以直接用文本编辑器（如 Notepad）编辑 settings.ini，也可以使用托盘菜单中的图形化配置窗口。设置变更后通常需要重新加载或重启 Lintalist 才能生效。如果<b>手工编辑 settings.ini，请先退出 Lintalist</b>，否则重新加载时可能覆盖你的修改。
+
+settings.ini 中也包含所有设置项的说明。
+
+一些重要选项：
+
+<table>
+<thead>
+<tr>
+	<th>配置项</th>
+	<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr id='SendMethod'><td><b><a href='#SendMethod' class='headline'>SendMethod</a></b></td><td>如果向不同应用发送文本时有问题，可以尝试不同发送方式：
+  1 = SendInput
+  2 = SendEvent
+  3 = SendPlay
+  4 = ControlSend</td></tr>
+<tr id='PasteDelay'><td><b><a href='#PasteDelay' class='headline'>PasteDelay</a></b></td><td>如果通过搜索、快捷键或缩写触发后文本没有粘贴到目标应用，可增加粘贴前等待的毫秒数。</td></tr>
+<tr id='TriggerKeys'><td><b><a href='#TriggerKeys' class='headline'>TriggerKeys</a></b></td><td>Shorthand 默认通过 TAB 与 SPACE 触发展开。可把触发键限制为 TAB 或 SPACE，也可使用 F1-F12 等其他键。</td></tr>
+<tr id='DoubleClickSends'><td><b><a href='#DoubleClickSends' class='headline'>DoubleClickSends</a></b></td><td>设置双击搜索结果时的行为：
+  1 = 粘贴 Part1，如 Enter，若有脚本则运行脚本
+  2 = 粘贴 Part2，如 Shift-Enter，若有脚本则运行脚本
+  3 = 粘贴 Part1，如 Ctrl-Enter，即使有脚本也总是粘贴 Part1
+  4 = 粘贴 Part2，如 Ctrl-Shift-Enter，即使有脚本也总是粘贴 Part2
+  5 = 编辑 Snippet
+  6 = 新建 Snippet
+
+  <span class='setting'>SingleClickSends</span> 可为单击设置相同行为。</td></tr>
+<tr id='DefaultBundle'><td><b><a href='#DefaultBundle' class='headline'>DefaultBundle</a></b></td><td>默认 Bundle 文件名，例如 default.txt。如果没有根据窗口标题找到匹配 Bundle，则加载此 Bundle。</td></tr>
+<tr id='AlwaysLoadBundles'><td><b><a href='#AlwaysLoadBundles' class='headline'>AlwaysLoadBundles</a></b></td><td>始终加载的 Bundle 文件名列表，例如 default.txt,bbcode.txt,css.txt。Lintalist 会根据当前活动应用加载匹配 Bundle，同时总是额外加载这里列出的 Bundle。</td></tr>
+<tr id='MaxRes'><td><b><a href='#MaxRes' class='headline'>MaxRes</a></b></td><td>搜索时最多显示的结果数量。Bundle 很大时，限制结果数量可提高响应速度。</td></tr>
+<tr id='StartSearchHotkey'><td><b><a href='#StartSearchHotkey' class='headline'>StartSearchHotkey</a></b></td><td>打开 <a href='#Searching'>Lintalist 搜索窗口</a>的快捷键，默认 CapsLock。搜索窗口已激活时，按此快捷键会在宽视图与窄视图之间切换。<span class='setting'>StartSearchHotkeyToggle</span> 可改为用同一快捷键显示/隐藏搜索窗口。TeamViewer 中需要开启“send key combinations”，并可能需要尝试其他按键组合。</td></tr>
+<tr id='QuickSearchHotkey'><td><b><a href='#QuickSearchHotkey' class='headline'>QuickSearchHotkey</a></b></td><td>快速搜索热键。它会剪切光标左侧的单词，打开 Lintalist 并开始搜索；如果只找到一个匹配项，会直接粘贴或运行。某些编辑器在未选中文本时会剪切或复制整行（UltraEdit、Sublime Text、EditPad 等），可能造成意外结果。若要禁用 QuickSearchHotkey，可在配置中清空该热键。</td></tr>
+<tr id='PreviewSection'><td><b><a href='#PreviewSection' class='headline'>PreviewSection</a></b></td><td>预览区显示内容：
+  1 = Snippet Part1 文本（推荐）
+  2 = Snippet Part2 文本（为空则回退到 Part1）
+  3 = Snippet 脚本代码（为空则回退到 Part1）</td></tr>
+<tr id='PasteMethod'><td><b><a href='#PasteMethod' class='headline'>PasteMethod</a></b></td><td>控制粘贴与剪贴板保留方式：
+  0 = 粘贴 Snippet 并保留当前剪贴板内容（默认）
+  1 = 粘贴 Snippet 并让它成为当前剪贴板内容，便于手动再次粘贴
+  2 = 不粘贴 Snippet，只复制到剪贴板，便于手动粘贴
+  插件 <a href='#pastemethod-plugin'>[[PasteMethod]]</a> 可对单个 Snippet 使用类似设置。</td></tr>
+<tr id='OnPaste'><td><b><a href='#OnPaste' class='headline'>OnPaste</a></b></td><td>粘贴 Snippet 后是否退出 Lintalist：0 = 否，1 = 是。</td></tr>
+<tr id='Statistics'><td><b><a href='#Statistics' class='headline'>Statistics</a></b></td><td>默认关闭。启用后可统计 Bundle 与 Snippet 使用情况。可通过托盘菜单或搜索窗口 Edit 菜单查看统计。统计会在 Lintalist 运行时约每两小时、查看统计时以及关闭程序时保存到 statistics.ini。注意统计不一定 100% 精确。</td></tr>
+<tr id='AlternateRowColor'><td><b><a href='#AlternateRowColor' class='headline'>AlternateRowColor</a></b></td><td>定义搜索结果列表的隔行背景色，使用 6 位十六进制 RGB（例如 eeeeee 或 c0c0c0）。留空则禁用。相关设置：<span class='setting'>AlternateSelectionColor</span>，用于定义选中行颜色。</td></tr>
+</tbody>
+</table>
+
+更多选项请在退出 Lintalist 后编辑 settings.ini，或通过托盘菜单打开配置窗口并重启应用。
+
+<span class='small'>设置窗口</span>
+<img src='img/lintalist-config.png' alt='Lintalist 设置' border='0' style='max-width:100%;' />
+
+<h3 id='Configuration-MultiCaret'><a href='#Configuration-MultiCaret' class='headline'>Multi<em>Caret</em></a></h3>
+
+你可以在 Snippet 中定义多个光标位置，简要说明见 <a href='#caret-plugin'>光标插件</a>。如何配置 <b>MultiCaret.ini</b> 的详细信息见 <a href='MultiCaret.md'>docs/MultiCaret.md</a>。
+
+如果不想使用 MultiCaret，只要避免在一个 Snippet 中使用多个 ^| 即可。目标编辑器必须支持多光标/多处编辑，并且必须有“选择单词”和“选择下一个匹配项”的键盘快捷键。已测试或确认可用的编辑器包括 Atom、Brackets、EverEdit、Komodo、Sublime Text、TextAdept、UltraEdit 23+、Visual Studio Code。
+
+<h3 id='Configuration-AltPaste'><a href='#Configuration-AltPaste' class='headline'>Alt<em>Paste</em></a></h3>
+
+默认情况下 Lintalist 使用 <kbd>Ctrl</kbd>+<kbd>C</kbd> 与 <kbd>Ctrl</kbd>+<kbd>V</kbd> 复制和粘贴。如果某些程序需要替代快捷键（例如控制台程序或图形应用），可在 <b>AltPaste.ini</b> 中为特定 exe 配置，详见 <a href='AltPaste.md'>docs/AltPaste.md</a>。其中也包含 Notepad++ 的绕过方案。
+
+<h3 id='Configuration-Linefeed'><a href='#Configuration-Linefeed' class='headline'>Line<em>feed</em></a></h3>
+
+某些程序需要 CRLF 才能正确粘贴换行，例如 notepad.exe；否则多行 Snippet 可能看起来被粘成一行。可在 linefeed.ini 中为特定程序定义替代换行字符，它可以是单个字符，也可以是多个字符。默认已包含 [notepad.exe] 与 [wordpad.exe] 示例。对于命令行程序，也可把换行替换为空格，避免 CR/LF 被当成 Enter 执行命令。
+
+<h3 id='Configuration-AfterPaste'><a href='#Configuration-AfterPaste' class='headline'>After<em>Paste</em><span style='color:#080;'>.ahk</span></a></h3>
+
+如果你希望 Lintalist 完成复制或粘贴后执行特殊动作，可以在 include\ 文件夹中创建文件：<b>AfterPaste.ahk</b>。该代码会在默认复制/粘贴命令之后、恢复剪贴板之前被 include。它不能包含函数。
+
+可使用 <code>If (Keys = [ShortcutCopy|ShortcutPaste|ShortcutCut])</code> 判断何时执行动作。若想在 Snippet 脚本中也使用这些值，请在脚本中调用 LLInit()，这样 ShortcutCopy、ShortcutPaste 与 ShortcutCut 的值才会可用。
+
+<h3 id='Configuration-ScriptTemplates'><a href='#Configuration-ScriptTemplates' class='headline'>脚本<em>模板</em></a></h3>
+
+要在脚本编辑器右键菜单中插入模板：
+
+1. 在 Lintalist 文件夹（lintalist.ahk/exe 所在处）创建 <b>ScriptTemplates</b> 文件夹。
+2. 放入该文件夹的任何 *.ahk 文件都会出现在脚本编辑框右键菜单中。文件夹内容变更后，需要重启 Lintalist 才会反映到菜单中。该菜单只在 Snippet 编辑器底部的脚本编辑区域显示。
+
+<h3 id='Configuration-AdditionalTools'><a href='#Configuration-AdditionalTools' class='headline'>附加<em>工具</em></a></h3>
+
+<span style='color:#c00;'>&lt;expert option&gt;</span>
+
+Lintalist 搜索窗口与 Snippet 编辑器都有 Tools 菜单，默认包含 Bundle Converters。要添加自己的工具，可在 Lintalist 文件夹创建 <b>UserTools.ini</b>。
+
+格式：菜单项名称=要运行的程序路径（路径含空格时加引号）
+
+<blockquote class='boxed'>
+<b>[Settings]</b>
+Notepad=c:\windows\notepad.exe
+Paint=mspaint.exe
+</blockquote>
+
+删除或重命名 UserTools.ini 并重启 Lintalist，即可移除这些工具。
+
+<span style='color:#c00;'>&lt;/expert option&gt;</span>
+
+<h3 id='Configuration-SnippetEditor'><a href='#Configuration-SnippetEditor' class='headline'>附加编辑器</a></h3>
+
+<span class='setting'>SnippetEditor</span> 定义 Snippet 编辑器中 “Edit in Editor” 功能启动的编辑器。若要即时选择其他编辑器，可在 Lintalist 文件夹创建 <b>Editors.ini</b>。
+
+格式：菜单项名称=path\program-to-run.exe（路径含空格时不要加引号）
+
+<blockquote class='boxed'>
+<b>[settings]</b>
+TextAdept=c:\Portable\TextAdept\TextAdept.exe
+Notepad++=c:\Portable\npp\notepad++.exe
+</blockquote>
+
+实验选项：如需把临时文件 __tmplintalistedit.<b>txt</b> 的扩展名改为其他值，可在 <b>session.ini</b> 的 <b>[editor]</b> 段添加：
+
+<blockquote class='boxed'>
+<b>[editor]</b>
+EditorTempFileExtension=<b>ahk</b>
+</blockquote>
+
+创建或编辑 editors.ini / session.ini 后需重启 Lintalist。Editor 菜单中的 Default 会使用 <span class='setting'>SnippetEditor</span> 指定的编辑器。删除或重命名 editors.ini 并重启即可移除附加编辑器。
+
+<h3 id='Configuration-Themes'><a href='#Configuration-Themes' class='headline'>主题</a></h3>
+
+Lintalist 搜索 GUI 与 Snippet 编辑器可通过 INI 文件定义主题。由于 AutoHotkey 限制，支持仍较基础，并非所有控件和窗口部分都能设置样式；可能出现闪烁，某些控件也可能临时丢失主题色。插件 GUI 不应用主题。
+
+主题工作方式与制作说明见 <a href='../themes/Themes.md'>themes/Themes.md</a>。示例主题见 <a href='https://github.com/lintalist/lintalist-themes'>https://github.com/lintalist/lintalist-themes</a>，解压到 lintalist\themes\。
+
+<h3 id='Configuration-nvda'><a href='#Configuration-nvda' class='headline'>NVDA</a></h3>
+
+如果希望 Lintalist 在粘贴 Snippet 后让 NVDA 朗读该文本，可以使用额外代码。NVDA 用户有现成的 AfterPaste.ahk。
+
+需要：
+
+1. AfterPaste.ahk：<a href='https://raw.githubusercontent.com/lintalist/Lintalist-AfterPaste/master/AfterPaste.ahk'>直接下载</a>，仓库：<a href='https://github.com/lintalist/Lintalist-AfterPaste'>Lintalist-AfterPaste</a>
+2. nvda.ahk：<a href='https://raw.githubusercontent.com/hi5/nvda-autohotkey/master/nvda.ahk'>直接下载</a>
+3. NVDA Controller DLL 文件：<a href='http://www.nvda-project.org/nvdaControllerClient/nvdaControllerClient_20100219.7z'>下载地址</a> 或 <a href='https://github.com/hi5/nvda-autohotkey/blob/master/nvdaControllerClient_20100219.7z?raw=true'>GitHub 镜像</a>
+
+把 AfterPaste.ahk 与 nvda.ahk 放入 lintalist\include 文件夹。把 nvdaControllerClient32.dll 与 nvdaControllerClient64.dll 放到 Lintalist 主目录，也就是 lintalist.ahk 与 lintalist.exe 所在处。重启 Lintalist 后，如果 NVDA 正在运行，粘贴后的 Snippet 文本应会被朗读。
+
+注意：如果使用 Shorthand，NVDA 可能朗读额外字符，因为 NVDA 与 AutoHotkey 在删除已输入缩写并替换为 Snippet 时不总是完全可靠。你可修改 AfterPaste.ahk，例如增加 nvdaCancel() 调用或 Sleep，让 Lintalist 有更多时间粘贴文本。
+
+<h2 id='LintalistBundles'><a href='#LintalistBundles' class='headline'>Lintalist <em>Bundle</em></a></h2>
+
+<b>Lintalist Bundle 的基本结构</b>
+
+虽然很多支持 Bundle、Taglist、Clip-list 或 Snippet 的程序喜欢使用 XML 或 INI，Lintalist Bundle Format 只是格式化的普通文本文件，易于理解和编辑。它的结构类似 YAML，不像 XML 那样笨重。你可以使用 Lintalist 内置编辑器 <a href='#F4'>编辑</a>、<a href='#F5'>复制</a>、<a href='#F6'>移动</a>、<a href='#F7'>添加</a>、<a href='#F8'>删除</a> Snippet，也可通过 <a href='#F10'>Bundle 属性编辑器</a> 从零创建新 Bundle。还可以使用 <a href='#BundleConvertors'>Bundle 转换器</a> 从其他应用导入数据。
+
+Bundle 文本文件保存在 <b>bundles\</b> 目录。开始编辑 Bundle 后，备份会复制到 <b>bundles\backup\</b>。
+
+<h2 id='SnippetsBundles'><a href='#SnippetsBundles' class='headline'>Snippet <em>与</em> Bundle</a></h2>
+
+一个 Bundle 由一个或多个 Snippet 组成。一个 Snippet 由五个部分组成：
+
+<table>
+<thead>
+<tr><th>部分</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><b>Part1</b> *1</td><td>按 Enter 粘贴到活动应用的文本，或运行脚本。</td></tr>
+<tr><td><b>Part2</b> *1</td><td>按 Shift-Enter 粘贴到活动应用的文本，或运行脚本。</td></tr>
+<tr><td><b>Hotkey</b></td><td>无需搜索，直接在活动应用中粘贴 Part1 文本，或运行脚本。</td></tr>
+<tr><td><b>Shorthand</b></td><td>类似 AutoHotkey Hotstring 的缩写展开。无需搜索，直接粘贴 Part1 或运行脚本。</td></tr>
+<tr><td><b>Script</b> *2</td><td>若 Snippet 有脚本，按 Enter、快捷键或缩写时将<b>不会</b>粘贴 Part1，而是运行脚本。</td></tr>
+</tbody>
+</table>
+
+双击结果列表项时发生什么，由配置菜单中的 <span class='setting'>DoubleClickSends</span> 决定。
+
+<span class='tip'>建议 Part1 总是包含一些有意义的内容。这样即使该 Snippet 实际运行脚本，搜索时你仍能看清自己选中了什么。</span>
+
+*1 这使你可以“搜索一种内容，粘贴另一种内容”，适合翻译、帮助文本或任何你能想到的场景。countries.txt 与 ahk.txt Bundle 中有示例。如果要粘贴的部分为空，Lintalist 会尽可能回退到另一部分。
+
+*2 脚本是普通 AutoHotkey 代码。
+
+Bundle 示例：
+
+<table border='0' cellpadding='0' cellspacing='0' id='borderless'>
+<tr valign='top'><td width='15%'><span class='llbundle'>BundleFormat:</span></td><td width='40%'><span class='flex'>1</span></td><td><span class='llcomment'>; 格式版本，未来格式变化时可能改变，Bundle 编辑器中不能改</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>Name:</span></td><td width='40%'><span class='flex'>CSS</span></td><td><span class='llcomment'>; 菜单和状态栏使用的名称，可在 Bundle 编辑器中修改</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>Description:</span></td><td width='40%'><span class='flex'>Bundle for Lintalist</span></td><td><span class='llcomment'>; 额外说明，可在 Bundle 编辑器中修改</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>Author:</span></td><td width='40%'><span class='flex'>Author</span></td><td><span class='llcomment'>; Lintalist 本身不实际使用，可在 Bundle 编辑器中修改</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>TitleMatch:</span></td><td width='40%'><span class='flex'>.css</span></td><td><span class='llcomment'>; 逗号分隔的窗口标题部分匹配列表</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>Patterns:</span></td><td></td><td><span class='llcomment'>; Snippet 从下方开始，每个新 Snippet 以 - LLPart1 开头</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>- LLPart1:</span></td><td width='40%'><span class='flex'>border-radius: ^|px;</span></td><td><span class='llcomment'>; 按 Enter 或双击粘贴的文本</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>&nbsp;&nbsp;LLPart2:</span></td><td width='40%'><span class='flex'>border-radius: [[input=Border radius]]px;
+-moz-border-radius: [[input=Border radius]]px;
+-webkit-border-radius: [[input=Border radius]]px;</span></td><td><span class='llcomment'>; 按 Shift-Enter 粘贴的文本</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>&nbsp;&nbsp;LLKey:</span></td><td width='40%'><span class='flex'>^+b</span></td><td><span class='llcomment'>; 快捷键，按下时自动插入 LLPart1 或运行脚本</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>&nbsp;&nbsp;LLShorthand:</span></td><td width='40%'><span class='flex'>bdrs</span></td><td><span class='llcomment'>; 输入缩写后按 Space 或 Tab 自动插入 LLPart1 或运行脚本</span></td></tr>
+<tr valign='top'><td width='15%'><span class='llbundle'>&nbsp;&nbsp;LLScript:</span></td><td width='40%'><span class='flex'></span></td><td><span class='llcomment'>; 如果存在，此 AHK 代码会在 Snippet 通过 Enter、快捷键或缩写触发时运行</span></td></tr>
+</table>
+
+<h3 id='Part1-2'><a href='#Part1-2' class='headline'>Part<em>1</em> 与 Part<em>2</em></a></h3>
+
+如上所述，一个 Snippet 有两个部分；若两者都存在，会同时显示在搜索结果中。即使从不使用 Part2，也可以正常使用 Lintalist，但 Part2 在很多场景中很有价值。
+
+<b>用法 1：两个可粘贴选项</b>
+
+Part1 与 Part2 可让你搜索一种信息、粘贴另一种信息。例如 countries Bundle 中，Part1 是官方 ISO 名称，Part2 是两位国家代码：按 <kbd>Enter</kbd> 粘贴国家名，按 <kbd>Shift</kbd>+<kbd>Enter</kbd> 粘贴两位代码。
+
+<table>
+<tr><th>粘贴 Part1（Enter）</th><th>粘贴 Part2（Shift-Enter）</th></tr>
+<tr><td>United Kingdom</td><td>GB</td></tr>
+<tr><td>Canada</td><td>CA</td></tr>
+</table>
+
+<b>用法 2：描述 / 标题</b>
+
+也可把 Part2 当作 Part1 的短标题或描述。例如 Markdown Bundle 中，Part1 是 Markdown 标记，Part2 是说明，这样你就能搜索 “bold” 找到对应片段。
+
+<table>
+<tr><th>粘贴 Part1</th><th>粘贴 Part2</th></tr>
+<tr><td>### ^|</td><td>Heading 3</td></tr>
+<tr><td>**[[selected]]**</td><td>Bold</td></tr>
+<tr><td>__[[selected]]__</td><td>Italic</td></tr>
+</table>
+
+如果 Bundle 中有很多相似的长 Snippet，可用 Part2 标注 FAQ、Email、Excel 等用途，帮助你在搜索结果第二列中快速识别。
+
+另一个例子是工时或客户代码管理：你可以搜索客户名或工作说明，然后粘贴对应代码。
+
+<h2 id='InteractiveBundleText'><a href='#InteractiveBundleText' class='headline'>交互式 Bundle 文本（<em>或 Plugin</em>）</a></h2>
+
+Snippet 的 Part1 和/或 Part2 可以包含特殊代码来插入动态数据。以下 <code>Snippet Codes</code>（插件）可用。你也可以学习 AutoHotkey 后编写自己的插件，更多信息见 <b><a href='../plugins/readme-howto.txt'>plugins\readme-howto.txt</a></b>。
+
+提醒：也可以使用 <a href='#FormattedText'>格式化文本 Snippet</a>（HTML、Markdown、Image、RTF）。
+
+插件处理顺序：
+
+1. 先处理本地变量。
+2. 按 Snippet 中出现的顺序从左到右处理每个插件。
+3. 如果是嵌套插件，顺序仍从左到右，但从内向外处理。
+
+示例：
+
+<blockquote class='boxed'>
+This is <code>[[plugin1]]</code>
+we continue with a triple nested plugin:
+<code>[[plugin2 [[plugin2-1 [[plugin2-1-1]] ]] ]]</code>
+and ending with
+<code>[[plugin3]]</code>
+</blockquote>
+
+处理顺序为：先处理 [[plugin1]]；然后 [[plugin2-1-1]]、[[plugin2-1]]、[[plugin2]]；最后 [[plugin3]]。
+
+<span class='tip' id='Brackets'><a href='#Brackets' class='headline'>插件语法使用双中括号 [[..]]。如果要避免双中括号被解释为插件，可转义：<span class='highlight'>\[\]</span> 与 <span class='highlight'>\]\]</span>。在插件选项中若要转义 [、]、|，使用 <span class='highlight'>&lt;SB</span>、<span class='highlight'>&gt;SB</span>、<span class='highlight'>^SB</span>。相关设置见 settings.ini 中的 <span class='setting'>ParseEscaped</span>。</a></span>
+
+<b>可用插件：</b>
+
+<table>
+<thead>
+<tr><th>代码与参数</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr id='caret-plugin'><td><a href='#caret-plugin' class='headline'><code>^|</code></a> 或 <code>^$</code></td><td>粘贴后的光标位置。例如 “Hello, this is a sample <code>^|</code>text” 会移除 ^|，并把光标放到 text 前。<code>^$</code> 是替代写法，适合与 Choice 插件组合，因为 | 字符会冲突。若目标编辑器支持 Multi-caret/edit，可在 Snippet 中放多个光标位置。Unicode、复杂文字、自动缩进或目标应用格式化代码时，光标位置可能不准确。</td></tr>
+<tr id='c-plugin'><td><a href='#c-plugin' class='headline'><code>[[C=Char|Repeat]]</code></a></td><td>默认粘贴文本会 trim 首尾空格和 Tab。此插件可在 Snippet 开头或结尾插入空格、Tab、换行，也可重复字符或文本。例如 <code>[[C=-|30]]</code> 插入 30 个连字符。可用 <code>[[C=space]]</code>/<code>[[C=\s]]</code> 表示空格，<code>[[C=tab]]</code>/<code>[[C=\t]]</code> 表示 Tab，<code>[[C=enter]]</code>/<code>[[C=\n]]</code> 表示换行。</td></tr>
+<tr id='calc-plugin'><td><a href='#calc-plugin' class='headline'><code>[[Calc=]]</code></a> *2</td><td>计算数学表达式，详见下方 <a href='#Calc'>Calc 文档</a>。</td></tr>
+<tr id='calendar-plugin'><td><a href='#calendar-plugin' class='headline'><code>[[Calendar=Format|LCID|to]]</code></a></td><td>显示日历窗口，让你选择日期并按指定格式插入。格式见 DateTime。示例：<code>[[Calendar=dd-MMM-yyyy]]</code> 会插入类似 25-Jan-2011。可指定 LCID；若选择日期范围，默认用 “ to ” 连接，也可用第三参数指定其他连接文本，如 <code>[[Calendar=dd-MMM-yyyy|| - ]]</code>。</td></tr>
+<tr id='choice-plugin'><td><a href='#choice-plugin' class='headline'><code>[[Choice=item1|item2|..]]</code></a></td><td>从列表选择项目，选项用 | 分隔。例如 <code>[[Choice=Red|Green|Blue]]</code>。若第一个选项以 ? 开头，它会作为提示文本显示；若以 ! 开头，可边输入边过滤选项；?! 顺序无关。可启用 “Select by digit” 用 Alt+1..0 选择前 10 项。</td></tr>
+<tr id='clipboard-plugin'><td><a href='#clipboard-plugin' class='headline'><code>[[Clipboard]]</code></a> *1</td><td>插入当前剪贴板内容。额外参数见 <a href='#ClipEx'>扩展剪贴板与选中文本</a>。</td></tr>
+<tr id='comment-plugin'><td><a href='#comment-plugin' class='headline'><code>[[Comment=]]</code></a></td><td>给 Snippet 添加注释。注释可被搜索，但粘贴前会完全移除。也可使用 Part2 作为提示或备注。</td></tr>
+<tr id='counter-plugin'><td><a href='#counter-plugin' class='headline'><code>[[Counter=Name|Value|Reset]]</code></a></td><td>跨 Bundle 计数器。示例 <code>[[Counter=InvoiceNumber]]</code> 默认加 1 并插入值；<code>[[Counter=InvoiceNumber|5]]</code> 加 5。若同一 Snippet 多次使用同一计数器但不想递增，后续实例可用 <code>|0</code>。计数器保存于 settings.ini，可通过托盘菜单 Manage counters 管理。未知计数器会自动创建。可用第三参数 reset 重置初值。</td></tr>
+<tr id='datetime-plugin'><td><a href='#datetime-plugin' class='headline'><code>[[DateTime=Format|Value|TimeUnits|LCID|RollOver]]</code></a></td><td>按 AutoHotkey FormatTime 选项插入当前日期/时间。示例 <code>[[DateTime=dd-MMM-yyyy]]</code>。可计算时间：<code>[[DateTime=dd-MMM-yyyy|5|Days]]</code> 插入 5 天后的日期。TimeUnits 可为 Seconds、Minutes、Hours、Days。LCID 可控制区域语言。RollOver 可把日期滚动到指定星期，如 mon-fri 或 2-6。</td></tr>
+<tr id='file-plugin'><td><a href='#file-plugin' class='headline'><code>[[File=Filename|select|clean]]</code></a></td><td>把指定文件内容插入文本。路径可为完整路径或相对于 Lintalist 目录。<code>|Select</code> 会打开文件选择对话框，Filename 作为初始目录；<code>|Clean</code> 会移除 []| 字符，适合把文件内容作为另一个插件输入时使用。Select 与 Clean 顺序不限。</td></tr>
+<tr id='filelist-plugin'><td><a href='#filelist-plugin' class='headline'><code>[[FileList=?Options|path]]</code></a></td><td>从一个或多个文件夹返回分隔文件列表，常与 <code>[[Choice]]</code> 配合选择文件。支持 * 和 ? 通配符，多个通配符用 ; 分隔。选项：D 包含目录，F 包含文件，R 递归，P 完整路径，SC 逗号分隔，SN 换行，ST Tab，T Total Commander 当前面板，E Explorer 当前文件夹，W 当前窗口标题路径，U URI 路径使用 /，X 返回相对路径，! 自动用于可过滤 Choice。示例：<code>[[FileList=!?P|[[A_ScriptDir]]\docs\img\*.*]]</code>，可用 F3 切换预览。</td></tr>
+<tr id='input-plugin'><td><a href='#input-plugin' class='headline'><code>[[Input=Text|Default]]</code></a></td><td>请求用户输入。示例：<code>[[Input=Customer's name?]]</code>。同一问题重复出现时会复用输入。可用第二参数提供默认值，如 <code>[[Input=My favourite color|Green]]</code>。</td></tr>
+<tr id='pastemethod-plugin'><td><a href='#pastemethod-plugin' class='headline'><code>[[PasteMethod=0|1|2]]</code></a></td><td>类似全局 PasteMethod，但只作用于当前 Snippet。0 粘贴并保留剪贴板，1 粘贴并把 Snippet 留在剪贴板，2 不粘贴只复制到剪贴板。</td></tr>
+<tr id='random-plugin'><td><a href='#random-plugin' class='headline'><code>[[Random=1|10]]</code></a> 或 <code>[[Random=a|b|c]]</code></td><td>两种用法：返回范围内随机数，或从管道分隔列表中随机返回一项。</td></tr>
+<tr id='selected-plugin'><td><a href='#selected-plugin' class='headline'><code>[[Selected]]</code></a> *1</td><td>替换为当前选中文本。可用于把选中文本包裹进 HTML 标签等。额外参数见 <a href='#ClipEx'>扩展剪贴板与选中文本</a>。</td></tr>
+<tr id='snippet-plugin'><td><a href='#snippet-plugin' class='headline'><code>[[Snippet=Shorthand|?part]]</code></a></td><td>在指定位置插入同一 Bundle 中另一个 Snippet 的内容。使用目标 Snippet 的 Shorthand。默认插入 part1；<code>|2</code> 插入 part2，<code>|3</code> 表示脚本，<code>|4</code> 插入 shorthand。</td></tr>
+<tr id='snippet-split'><td><a href='#snippet-split' class='headline'><code>[[Split=input|?1|?2]]</code></a> *3</td><td>把输入拆分为变量，详见下方 Split 与 SplitRepeat。</td></tr>
+<tr id='snippet-splitrepeat'><td><a href='#snippet-splitrepeat' class='headline'><code>[[SplitRepeat=input|?1|?2|?3]]</code></a> *3</td><td>拆分并重复处理输入，详见下方 Split 与 SplitRepeat。</td></tr>
+<tr id='localvar-plugin'><td><a href='#localvar-plugin' class='headline'><code>[[Var=Name]]</code></a> *4</td><td>插入跨 Bundle 可用的本地变量。详见 <a href='#LocalBundle'>本地 Bundle 变量</a>。本地变量也可在脚本中使用。</td></tr>
+<tr id='string-plugin'><td><a href='#string-plugin' class='headline'><code>[[String=<em>text</em>|option]]</code></a></td><td>转换文本。见 <a href='#ClipEx'>扩展剪贴板与选中文本</a>。String 插件不支持 wrap 选项。例如 <code>[[String=[[Input=Name?]]|Upper]]</code> 会把输入姓名转为大写。</td></tr>
+<tr id='parts-plugin'><td><a href='#parts-plugin' class='headline'><code>[[Part1]]</code>、<code>[[Part2]]</code></a></td><td>在另一个部分中插入当前 Snippet 的 Part1 或 Part2。例如 <code>[[choice=[[part2]]]]</code> 可把 Part2 作为 Choice 选项。为避免递归，part1 会从 part1 中移除，part2 会从 part2 中移除。</td></tr>
+<tr id='query-plugin'><td><a href='#query-plugin' class='headline'><code>[[Query]]</code>、<code>[[Query1]]</code>、<code>[[Query2]]</code></a></td><td>把你在搜索框输入的查询文本插入 Snippet。Query 插件先于其他插件处理。默认 QueryDelimiter 是 &gt;，搜索时该字符之后内容会被忽略；Query1 是分隔符之前，Query2 是之后。通过快捷键或缩写触发且没有搜索窗口时，Query 会自动转换为 Input 请求输入。</td></tr>
+<tr id='snippet-richformat'><td><a href='#snippet-richtformat' class='headline'><code>[[html]]</code>、<code>[[md]]</code>、<code>[[rtf=]]</code>、<code>[[image=]]</code></a></td><td>用于 <a href='#FormattedText'>格式化文本 Snippet</a>。提示：Image 插件接受 clipboard 作为图片路径，例如 <code>[[image=[[clipboard]]]]</code>。可配合 <code>[[PasteMethod=2]]</code> 让图片保留在剪贴板中。</td></tr>
+<tr id='snippet-llpart'><td><a href='#snippet-llpart' class='headline'><code>[[llpart1]]</code>、<code>[[llpart2]]</code></a>、<code>[[llshorthand]]</code></td><td>在 <a href='#Script'>脚本</a>中作为 Snippet Part1、Part2、Shorthand 的占位符。</td></tr>
+</tbody>
+</table>
+
+<h3 id='ClipEx'><a href='#ClipEx' class='headline'>*1 <em>扩展 Clipboard 与 Selected text</em></a></h3>
+
+<code>[[Clipboard]]</code> 与 <code>[[Selected]]</code> 支持额外参数：
+
+<code>[[Clipboard=options]]</code> 与 <code>[[Selected=options]]</code>
+
+<table>
+<tr><th>选项</th><th>缩写</th><th>用途</th></tr>
+<tr><td>Upper</td><td align='middle'>U</td><td>把选中文本或剪贴板转换为大写。</td></tr>
+<tr><td>Lower</td><td align='middle'>L</td><td>把选中文本或剪贴板转换为小写。</td></tr>
+<tr><td>Title</td><td align='middle'>T</td><td>转换为标题大小写。可用 <code>[[Selected=T|language|ini-file]]</code> 指定 TitleCase 规则。language 与 ini-file 都可选；省略时会在 Lintalist 文件夹创建 TitleCase.ini。自定义 INI 建议使用 UTF-16 编码以正确处理 Unicode / 扩展 ASCII。</td></tr>
+<tr><td>Trim</td><td align='middle'>R</td><td>去除选中文本或剪贴板首尾空格/Tab。</td></tr>
+<tr><td>Sentence</td><td align='middle'>S</td><td>转换为 Sentence case。</td></tr>
+<tr><td>Wrap|before|after</td><td align='middle'>W</td><td>用 before 与 after 包裹选中文本或剪贴板。如果有多行，每一行都会分别包裹。例如 <code>[[Selected=Wrap|&lt;li&gt;|&lt;/li&gt;]]</code> 会把每一行包裹成 li 标签。</td></tr>
+</table>
+
+<h3 id='Calc'><a href='#Calc' class='headline'>*2 <em>Calc 插件</em></a></h3>
+
+Calc 插件使用 Laszlo 的 Monster/Eval 函数计算数学表达式。它支持基础与高级数学运算、标准 AutoHotkey 函数、预定义函数和常量。
+
+- 算术运算符：+、-、*、/、\（或 % = mod）、**（或 @ = power）
+- AHK 函数：Abs、Ceil、Exp、Floor、Log、Ln、Round、Sqrt、Sin、Cos、Tan、ASin、ACos、ATan
+- 预定义函数：SGN、Fib、Fac（sign、Fibonacci、Factorial）
+- 预定义常量：e、pi、inch、foot、mile、ounce、pint、gallon、oz、lb
+
+<table>
+<tr><th>[[calc=]] 中的表达式</th><th>结果</th></tr>
+<tr><td>1 + 1</td><td>2</td></tr>
+<tr><td>6 / 2</td><td>3</td></tr>
+<tr><td>12 + 3 * 4 / 2 - 1</td><td>17</td></tr>
+<tr><td>5 \ 2</td><td>1（5 mod 2 = 1）</td></tr>
+<tr><td>100/3 $2</td><td>33.33（保留 2 位小数）</td></tr>
+</table>
+
+输入示例：
+
+<blockquote class='boxed'>
+Converting Celsius to Fahrenheit °C x 9/5 + 32. Today it was:
+<code>[[Calc=([[Input=What is todays temperature in C?]]*(9/5))+32]]°F (=[[Input=What is todays temperature in C?]]°C)</code>
+</blockquote>
+
+使用输入与本地变量：
+
+<blockquote class='boxed'>
+You have bought <code>[[Input=Number bought]]</code> items at a price of <code>[[var=itemprice]]</code> each.
+That brings the total to: <code>[[Calc=[[Input=Number bought]]*[[var=itemprice]]]]</code>.
+</blockquote>
+
+三角函数 Sin、Cos、Tan 等使用<b>弧度</b>。度转弧度乘以 pi/180；弧度转度乘以 180/pi。例如：
+
+	sin(30/180*pi)
+	180/pi*asin(0.5)
+
+高级数学可参考原 Monster/Eval 论坛帖或研究 plugins\calc.ahk。若需求复杂，建议先用独立 Eval 脚本实验，再放入 Calc 插件。
+
+<h3 id='Split'><a href='#Split' class='headline'>*3 <em>Split 与 SplitRepeat</em></a></h3>
+
+<code>[[Split=input|?1|?2]]</code> 与 <code>[[SplitRepeat=input|?1|?2|?3]]</code>
+
+<b>Split</b> 会创建一组按顺序编号的临时变量，可放在 Snippet 任意位置。这适合处理从表格复制来的多列或多行文本。
+
+<table>
+<tr><th>选项</th><th>含义</th></tr>
+<tr><td>input</td><td>可以是文本、另一个插件，或保留关键字 selected / clipboard。注意 input 不应包含 []|。</td></tr>
+<tr><td>?1</td><td>第一层拆分字符。保留选项：<em>\s</em> = 空格，<em>\t</em> = Tab，<em>\n</em> = 换行。只使用 ?1 时，会创建 <code>[[sp=1]]</code>、<code>[[sp=2]]</code>、<code>[[sp=3]]</code> 等变量。</td></tr>
+<tr><td>?2</td><td>第二层拆分字符，创建二维变量，如 <code>[[sp=1,1]]</code>、<code>[[sp=1,2]]</code>、<code>[[sp=3,2]]</code>。使用 ?1 与 ?2 时，?1 可理解为行标记，?2 为列标记。</td></tr>
+</table>
+
+示例，选中文本为 <em class='sel'>word1 word2 word3</em>：
+
+<blockquote class='boxed'>
+<code>[[Split=selected|\s]]</code>
+Hello <code>[[sp=1]]</code>
+Hello <code>[[sp=2]]</code>
+Hello <code>[[sp=3]]</code>
+</blockquote>
+
+结果：
+
+<blockquote class='boxed'>
+Hello word1
+Hello word2
+Hello word3
+</blockquote>
+
+读取文本文件并使用第三行：
+
+<blockquote class='boxed'>
+<code>[[Split=[[File=example.txt]]|\n]]</code>
+The third line of the text file is <code>[[sp=3]]</code>
+</blockquote>
+
+二维示例，选中文本：
+
+<em class='sel'>wordA1 wordA2 wordA3
+wordB1 wordB2 wordB3</em>
+
+使用：
+
+<blockquote class='boxed'>
+<code>[[Split=selected|\n|\s]]</code>
+Hello <code>[[sp=1,1]]</code>
+Hello <code>[[sp=1,2]]</code>
+Hello <code>[[sp=1,3]]</code>
+Hello <code>[[sp=2,1]]</code>
+Hello <code>[[sp=2,2]]</code>
+Hello <code>[[sp=2,3]]</code>
+</blockquote>
+
+<b>SplitRepeat</b> 类似 Split，但能重复 Snippet，直到所有部分都被处理完。它最多接受三个拆分参数 ?1|?2|?3。适合输入行数或项目数未知的场景。
+
+基本示例，选中文本为 <em class='sel'>a,b,c,d</em>：
+
+<blockquote class='boxed'>
+<code>[[SplitRepeat=selected|,]]</code>
+Hello <code>[[sp=1]][[C=\n]]</code>
+</blockquote>
+
+结果：
+
+<blockquote class='boxed'>
+Hello a
+Hello b
+Hello c
+Hello d
+</blockquote>
+
+<b><i>命名 Split</i></b>
+
+可写为 <code>[[Split_name=input|?1|?2]]</code> 与 <code>[[SplitRepeat_name=input|?1|?2|?3]]</code>。如果一个 Snippet 中需要多个 Split，命名可避免互相干扰，也允许 Split 与 SplitRepeat 组合。
+
+例如：
+
+<blockquote class='boxed'>
+<code>[[Split_MyName=selected|\t]]</code>
+<code>[[SplitRepeat_OtherName=[[sp_MyName=2]]|\s]]</code>
+result=<code>[[sp_OtherName=1]]</code>
+</blockquote>
+
+还可以把 Split 与 Choice 组合，实现带逻辑的 Snippet：先用 Choice 选择编号，再用编号从另一个 Split 中取对应值。
+
+<h3 id='LocalBundle'><a href='#LocalBundle' class='headline'>*4 <em>本地 Bundle（变量）[[Var=...]]</em></a></h3>
+
+使用 <code>[[Var=]]</code> 可插入定义在特殊 Bundle 中的变量。该文件保存在 <b>local\local.txt</b>，结构类似普通 Bundle，但只有变量名和内容。可用于保存个人信息，如姓名、地址等，方便复用，也方便分享 Bundle 时让每个用户填自己的本地变量。
+
+<blockquote class='boxed'>
+- LLVarName: MyAddress
+  LLContent: Agent Cooper
+  The Black Lodge
+  Twin Peaks
+</blockquote>
+
+之后可在任意 Snippet 中写 <code>[[Var=MyAddress]]</code> 插入地址。若地址变化，只需更新本地变量，所有 Bundle 自动使用新值。
+
+可通过托盘菜单或搜索窗口 Edit 菜单打开 Manage local variables。本地变量编辑器中 Scan 按钮可扫描 Bundle 中的新变量并添加。
+
+<span class='small'>本地 Bundle 编辑器</span>
+<img src='img/lintalist-local-bundle-editor.png' alt='本地 Bundle 编辑器' border='0' style='max-width:100%;' />
+
+<h3 id='TextExample'><a href='#TextExample' class='headline'>文本 Snippet 示例（Part1 或 Part2）：</a></h3>
+
+<blockquote class='boxed'>
+Dear <code>[[Input=Enter Name of Customer]]</code>,
+
+thank you for your order of your pair of <code>[[Choice=Red|Blue|Black|Pink|Brown]]</code> shoes 
+at <code>[[DateTime=dd-MMM-yyyy]]</code>.
+
+Your sincerely,
+<code>[[Var=Name]]</code>
+<code>[[Var=Address]]</code>
+</blockquote>
+
+<h2 id='Script'><a href='#Script' class='headline'>脚本</a></h2>
+
+你可以在 Snippet 中包含任何有效 AutoHotkey 脚本。代码会保存为临时文件并用 AutoHotkey 运行。临时脚本写入 Lintalist 目录中的 <b>tmpscrpts\</b>，脚本结束后删除。
+
+<span class='tip'>可通过托盘菜单启用/禁用 Scripts</span>
+
+<b id='script-llinit'><a href='#script-llinit' class='headline'>特殊脚本函数：LLInit()</a></b>
+
+如果在脚本开头调用 <code>LLInit()</code>，以下变量和函数可用。
+
+<a name='script-variables'></a><a href='#script-variables' class='headline'>变量：</a>
+
+- ActiveWindowID（可与 ahk_id 配合）
+- ActiveWindowProcessName（可与 ahk_exe 配合）
+- ActiveWindowClass（可与 ahk_class 配合）
+- ActiveWindowTitle
+- ActiveControl
+- SendMethod（设置项）
+- PasteDelay（设置项）
+
+这些 Active* 变量保存的是 Lintalist 搜索窗口被激活时的活动程序信息；如果通过快捷键或缩写触发，则保存当前活动程序信息。你可以用它们确保脚本作用于正确窗口。
+
+<a name='script-functions'></a><a href='#script-functions' class='headline'>函数：</a>
+
+- GetActiveWindowStats()
+  获取活动窗口和控件信息。
+
+- SendKey(Method = 1, Keys = "")
+  使用定义的发送方法发送文本或按键。
+  1 = SendInput，2 = SendEvent，3 = SendPlay，4 = ControlSend。
+
+- ClipSet(Task, ClipNum=1, SendMethod=1, Value="")
+  Lintalist 用于设置/恢复剪贴板。ClipSet 还有更多高级功能，详见 <b>include\default.ahk</b>。
+
+<b id='script-plugins'><a href='#script-plugins' class='headline'>特殊脚本插件</a></b>
+
+可在脚本中使用 <code>[[llpart1]]</code>、<code>[[llpart2]]</code>、<code>[[llshorthand]]</code> 引入 Part1、Part2 或 Shorthand。Lintalist 会先处理其中的插件，再把结果作为多行变量写入脚本。
+
+Snippet 中的脚本：
+
+<blockquote class='boxed'>
+[[llpart1]]
+<span class='llbundle'>MsgBox</span> % llpart1
+</blockquote>
+
+启动后会变成：
+
+<blockquote class='boxed'>
+llpart1=
+(join`n %
+....Part1 文本....
+)
+<span class='llbundle'>MsgBox</span> % llpart1
+</blockquote>
+
+如果 Part1 或 Part2 中有光标插件 <code>^|</code>，还会保存 <em>LLBackLeft1、LLBackLeft2、LLBackUp1、LLBackUp2</em>，可用来发送 Up 与 Left 重新定位光标。
+
+脚本模板（如果你要使用剪贴板并粘贴结果）：
+
+<blockquote class='boxed'>
+<span class='llbundle'>#NoEnv</span>
+<span class='llbundle'>#SingleInstance, force</span>
+<span class='llbundle'>SetBatchLines, -1</span>
+<span class='llbundle'>ListLines, off</span>
+<span class='llbundle'>LLInit()</span>
+<span class='llbundle'>ClipSet("s",1,SendMethod,Clipboard)</span>
+<span class='llbundle'>ClearClipboard()</span>
+
+; ... your code ... may include [[llpart1]] and/or [[llpart2]]
+
+<span class='llbundle'>SendKey(SendMethod, ShortcutPaste)</span>
+<span class='llbundle'>Clipboard:=ClipSet("g",1)</span>
+<span class='llbundle'>ExitApp</span>
+</blockquote>
+
+注意：为安全起见，不要在脚本注释中把 <code>[[llpart1]]</code>、<code>[[llpart2]]</code>、<code>[[llshorthand]]</code> 当作普通文字写入，否则也可能被替换。
+
+<h2 id='Functions'><a href='#Functions' class='headline'>函数</a></h2>
+
+此功能面向更有经验的 AutoHotkey 用户。Lintalist 支持 AutoHotkey 内置函数（Asc、SubStr、Floor、Mod 等）以及用户自定义函数。
+
+调用语法：<code>[[function(optional parameters)]]</code>。不要写成 function=()，函数名后不要加等号。
+
+示例：<code>[[SubStr("AutoHotkey",5,3)]]</code> → 结果：Hot
+
+自定义函数需要被包含进 Lintalist。可以写在 <em>plugins\MyFunctions.ahk</em> 中，也可以在该文件中 #include 其他函数。更新 Lintalist 时 MyFunctions.ahk 不会被覆盖。修改后请重启 Lintalist。
+
+标准函数示例：<code>[[EnvGet(EnvVarName)]]</code>，可读取 Windows 环境变量。
+
+如果函数需要更新整个 Snippet，而不只是处理返回值，需要在函数中把 <em>clip</em> 声明为 global：
+
+<blockquote class='boxed'>
+MyFunc(parameters)
+   {
+    <span class='llbundle'>global</span> clip
+    ; ... your code ...
+    clip:="New Content"
+    <span class='llbundle'>Return</span>
+   }
+</blockquote>
+
+最多支持 20 个参数。
+
+<h2 id='Variables'><a href='#Variables' class='headline'>内置<em>变量</em></a></h2>
+
+Lintalist 支持一部分 AutoHotkey 内置变量。只需在 Snippet、插件、函数中用 [[..]] 包裹即可替换为对应值。
+
+<blockquote class='boxed'>
+My documents folder is [[A_MyDocuments]] and my IP is [[A_IPAddress1]]
+My temp folder is <code>[[EnvGet(temp)]]</code>
+</blockquote>
+
+如果要修改支持哪些 AutoHotkey 内置变量，可在退出 Lintalist 后编辑 settings.ini 中的 <span class='setting'>AutoHotkeyVariables</span>。
+
+支持示例：
+
+- 特殊字符：A_Space、A_Tab
+- 脚本属性：A_WorkingDir、A_ScriptDir、A_ScriptName、A_ScriptFullPath、A_AhkVersion、A_AhkPath、A_IsUnicode、A_IsCompiled
+- 日期时间：A_YYYY、A_MM、A_DD、A_MMMM、A_MMM、A_DDDD、A_DDD、A_WDay、A_YDay、A_YWeek、A_Hour、A_Min、A_Sec、A_MSec、A_Now、A_NowUTC、A_TickCount
+- 系统与用户信息：A_Temp、A_OSVersion、A_Is64bitOS、A_Language、A_ComputerName、A_UserName、A_WinDir、A_ProgramFiles、A_AppData、A_Desktop、A_Startup、A_MyDocuments、A_IsAdmin、A_ScreenWidth、A_ScreenHeight、A_ScreenDPI、A_IPAddress1..4
+
+<h2 id='FormattedText'><a href='#FormattedText' class='headline'>格式化文本 <em>Snippet</em></a></h2>
+
+Lintalist 支持多种格式化文本 Snippet。格式化文本或富文本不同于纯文本，包含颜色、粗体、斜体、字号、链接等样式信息。
+
+<b>通用注意事项：</b>
+1. 粘贴目标应用必须支持对应格式，否则不会粘贴任何内容。例如把图片粘贴到 Notepad 不会有结果。某些应用接受 HTML 但不接受 RTF，反之亦然。
+2. HTML、Markdown 与 RTF 支持插件，Image 不支持。RTF 中的插件支持取决于 RTF 文件写法（换行、格式等），可能需要实验，并尽量避免给插件文本本身套样式。
+3. 粘贴后光标位置 <code>^|</code> 不适用于这些格式化文本 Snippet。
+4. 如果显示图标，列表中会用 HTML/Markdown、RTF、Image 图标标识格式化 Snippet。
+
+<h3 id='html-FormattedText'><a href='#html-FormattedText' class='headline'><em>HTML</em></a></h3>
+
+要把 HTML 作为格式化文本粘贴，需要在 Snippet 中包含 <code>[[html]]</code>，通常放在开头，但可位于任意位置。可以省略 html、head、body 标签。
+
+可用 <code>[[Snippet=]]</code> 嵌套或链接多个 HTML Snippet。如果任何嵌套 Snippet 包含 <code>[[html]]</code>，整个 Snippet 都会按 HTML 转换。不要混用 HTML 与 MD Snippet，以免结果不可预期。
+
+<blockquote class='boxed'>
+<code>[[html]]</code>
+&lt;h3&gt;Hello: [[Input=What is your name]]&lt;/h3&gt;
+
+&lt;p&gt;This &lt;b&gt;is&lt;/b&gt; a &lt;em&gt;sentence&lt;/em&gt; with formatting.&lt;/p&gt;
+
+&lt;p&gt;Today is &lt;em&gt;[[DateTime=dd MMMM yyyy]]&lt;/em&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;list item&lt;/li&gt;
+	&lt;li&gt;list item&lt;/li&gt;
+	&lt;li&gt;list item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Images also work - either use an http URI:&lt;br /&gt;
+&lt;img src='http://lintalist.github.io/img/lintalist.png'&gt;&lt;/p&gt;
+
+&lt;p&gt;or a file URI:&lt;br /&gt;
+&lt;img src='docs/img/lintalist.png'&gt;&lt;/p&gt;
+</blockquote>
+
+注意：某些应用（例如 Webmail）需要 HTTP URI 才能使用图片。若要使用本机图片，可以省略完整 file:// 路径，Lintalist 会基于安装目录自动补全相对路径。
+
+示例：
+
+	&lt;img src='Images/lintalist.jpg'&gt;
+	&lt;img src='../../anotherimage.png'&gt;
+
+<h3 id='markdown-FormattedText'><a href='#markdown-FormattedText' class='headline'><em>Markdown</em></a></h3>
+
+要把 Markdown 作为格式化文本粘贴，需要在 Snippet 中包含 <code>[[md]]</code>。目前只支持基础 Markdown；嵌套列表尚不支持，表格支持也较基础。可以嵌套或链接多个 MD Snippet，但不要与 HTML Snippet 混用。
+
+<blockquote class='boxed'>
+<code>[[md]]</code>
+# Heading 1
+
+* unordered list entry
+* unordered list entry
+
+this is a **normal line** of *text* with some markup
+
+1. numbered list entry
+2. numbered list entry
+
+Inserting a link [AutoHotkey](https://autohotkey.com) also works
+
+![Lintalist](https://raw.github.com/lintalist/lintalist/master/docs/img/lintalist.png)
+</blockquote>
+
+Markdown 转 HTML 函数来自 GenDocs 的简化 Markdown 语法，支持：段落、行尾两个空格的换行、最多三级标题、强调、加粗、行内代码、以 &gt; 开头的代码区块、无序列表、有序列表、转义序列、链接、图片，以及基础表格。
+
+插入 HTML 块可用两段 ~~~ 包围：
+
+~~~
+&lt;p&gt;HTML code here&lt;/p&gt;
+~~~
+
+表格规则：以 | 开头表示表格开始，空行表示结束；第一行单元格视为表头；单个 | 表示单元格分隔；不支持单元格对齐、跨列、跨行。
+
+<h3 id='rtf-FormattedText'><a href='#rtf-FormattedText' class='headline'><em>RTF</em></a></h3>
+
+RTF 类似 <a href='#file-plugin'>File</a> 插件，会从指定文件插入格式化文本（包括图片）。路径可以是完整路径或相对于 Lintalist 目录。Snippet 中其他文本会被丢弃。
+
+<blockquote class='boxed'><code>[[rtf=Extras\examples\example.rtf]]</code></blockquote>
+
+示例 RTF 文件可在 Extras\formatted\ 或 extras\examples\ 中找到。
+
+<h3 id='image-FormattedText'><a href='#image-FormattedText' class='headline'><em>Image</em></a></h3>
+
+Image 类似 <a href='#file-plugin'>File</a> 插件，会从指定文件插入图片。路径可以是完整路径或相对于 Lintalist 目录。Snippet 中其他文本会被丢弃。
+
+<blockquote class='boxed'><code>[[image=Extras\examples\image.png]]</code></blockquote>
+
+示例图片文件可在 Extras\formatted\ 或 extras\examples\ 中找到。
+
+<h2 id='Editing'><a href='#Editing' class='headline'>编辑 Snippet <em>与 Bundle</em></a></h2>
+
+<h3 id='F4'><a href='#F4' class='headline'><span class='key'>F4</span>（编辑 Snippet）</a></h3>
+
+搜索 Bundle 并选中要编辑的 Snippet（用光标或鼠标高亮），按 F4 编辑。Lintalist Bundle Editor 会打开，你可编辑快捷键、缩写、两个文本部分和脚本。插件菜单可插入插件、可用本地变量和计数器。
+
+如果要在默认文本编辑器中编辑文本或脚本，点击对应的 “Edit in Editor” 按钮。它会打开一个临时文件；保存并关闭编辑器后，修改会自动复制回 Lintalist Bundle Editor。
+
+[✔] Monitor editor：取消勾选可禁用上述自动更新。按下 “Edit in Editor” 后按钮会变成 “Load from File”，用于手动加载编辑后的文件内容。
+
+使用 “Edit in Editor” 时，Snippet Editor 中其他 “Edit in Editor” 按钮会被禁用。若需要恢复，可使用 Editor 菜单中的 “Reset (enable) Edit Buttons”。点击保存按钮后，修改会立即生效。
+
+<span class='tip'>在 Part1 或 Part2 编辑框中右键可打开 Plugins 菜单；在 Script 编辑框中右键可打开 <a href='#Configuration-ScriptTemplates'>Script Templates</a>。</span>
+
+<span class='small'>Snippet 编辑器</span>
+<img src='img/lintalist-snippet-editor.png' alt='Snippet 编辑器' border='0' style='max-width:100%;' />
+
+要修改 Bundle 名称、TitleMatch 等属性，请使用 <a href='#F10'>Lintalist Bundle Editor</a>。
+
+<h3 id='F5'><a href='#F5' class='headline'><span class='key'>F5</span>（复制 Snippet 并编辑）</a></h3>
+
+搜索并选中要复制的 Snippet，按 F5。Lintalist Bundle Editor 会打开，你可以编辑快捷键、缩写、两个文本部分和脚本。保存后修改立即可用。也可在第二个标签页修改 Bundle 属性。
+
+<i>注意：此操作（F5）未经过充分测试。</i>
+
+<h3 id='F6'><a href='#F6' class='headline'><span class='key'>F6</span>（移动 Snippet 到另一个 Bundle）</a></h3>
+
+搜索并选中要移动的 Snippet，按 F6。弹出菜单允许你选择目标 Bundle。
+
+<i>注意：此操作（F6）未经过充分测试。</i>
+
+<h3 id='F7'><a href='#F7' class='headline'><span class='key'>F7</span>（添加新 Snippet）</a></h3>
+
+添加新 Snippet 前，请确保目标 Bundle 已加载到搜索窗口。如果加载了多个 Bundle，会先询问要把新 Snippet 添加到哪个 Bundle。点击保存后，新 Snippet 立即可用。
+
+<h3 id='F8'><a href='#F8' class='headline'><span class='key'>F8</span>（删除 Snippet）</a></h3>
+
+搜索并选中要删除的 Snippet，按 F8。确认后 Snippet 会从 Bundle 中移除。
+
+<span class='tip'>备份：每当编辑（F4）或删除（F8）Snippet 时，Lintalist 在重启或关闭时会把 Bundle 备份到 bundles\backup\。如果不满意修改，可复制回旧版本。注意，上次备份后新增的 Snippet 可能需要重新添加。</span>
+
+<h2 id='ManagingBundles'><a href='#ManagingBundles' class='headline'>管理 <em>Bundle</em></a></h2>
+
+- 如果有新 Bundle，只需把文件复制到 Bundles 目录并重启或重新加载 Lintalist。
+- 如果要创建新 Bundle，启动 Lintalist，打开搜索窗口并 <a href='#F10'>按 F10</a>。新 Bundle 会保存到 Bundles 目录。
+- 如果不再使用某个 Bundle，请先退出 Lintalist，再从 Bundles 文件夹删除，或使用 Bundle Editor 删除。
+- 可使用 <a href='#BundleConvertors'>Bundle 转换器</a> 从多种格式转换到 Lintalist 格式。
+
+<h3 id='F10'><a href='#F10' class='headline'><span class='key leftpad'>F10</span>（Bundle 属性）</a></h3>
+
+若要修改现有 Bundle 的属性，例如菜单中显示的名称或 TitleMatch，可在搜索窗口激活时按 F10 或使用菜单打开 Bundle 属性编辑器。选择 Bundle，修改属性并点击 SAVE。
+
+<b>新建 Bundle</b>
+
+有两种添加新 Bundle 的方式：
+
+1. 在文本编辑器中创建新 Bundle，并复制到 \bundle\ 文件夹后重新加载。
+2. 使用 Lintalist 创建 Bundle 并开始添加 Snippet。
+
+打开搜索窗口，使用 Edit → Bundle properties 或按 F10。Lintalist Bundle Editor 打开后可输入名称等信息。点击保存时会要求输入 Bundle 文件名。
+
+最重要字段是 <b>Name</b> 与 <b>TitleMatch</b>。Name 用于 Bundle 菜单，也可显示在搜索结果中；TitleMatch 可让 Bundle 上下文敏感，也就是只有窗口标题匹配时，搜索、缩写和快捷键才可用。
+
+TitleMatch 可以是逗号分隔列表：
+
+1. 窗口标题的部分匹配。不要使用通配符。示例：.txt,.doc 可以，*.txt,*.doc 不可以。
+2. 程序可执行文件名，即 AutoHotkey 中的 ahk_exe。示例：cmd.exe,notepad.exe。
+
+两者可组合，例如：.txt,notepad.exe。
+
+反向匹配：TitleMatch 以 <b>!</b> 开头时，表示这些窗口中 Bundle 不应激活。例如 <code>!txt</code> 让 Bundle 在除 txt 文件外的窗口中可用。此功能测试程度不如常规 TitleMatch。
+
+新 Bundle 保存在 bundle 目录中。添加新 Bundle 后 Lintalist 会重启，并自动加入第一个 Snippet。之后可通过 Edit → New snippet 或 F7 添加更多 Snippet；请先通过搜索窗口 Bundle 菜单加载目标 Bundle。完成后别忘了解锁。
+
+<span class='small'>Bundle 编辑器</span>
+<img src='img/lintalist-bundle-editor.png' alt='Bundle 编辑器' border='0' style='max-width:100%;' />
+
+<h3 id='BundleConvertors'><a href='#BundleConvertors' class='headline'>Bundle 转换器</a></h3>
+
+以下转换器位于 <b>Extras\BundleConverters\</b>，需要 AutoHotkey，可从搜索窗口和 Snippet 编辑器的 Tools 菜单访问。
+
+- List.ahk：普通列表（纯文本文件，每行一项）
+- UltraEdit.ahk：UltraEdit Taglists
+- CSV.ahk：CSV 文件（使用 DerRaphael 的 ReturnDSVArray）
+- Texter.ahk：Texter 导出的 Bundle（实验性转换器）
+
+如果你编写了转换器，或知道其他编辑器/程序的 taglist、bundle 等希望转换，请到 AutoHotkey 论坛或 GitHub Issues 提供示例链接。
+
+<h2 id='cmdline'><a href='#cmdline' class='headline'>命令行<em>参数</em></a></h2>
+
+<b>-Active</b>：启动 Lintalist 并打开搜索窗口。
+
+	已安装 lintalist.exe 的用法：<em>lintalist.exe lintalist.ahk -Active</em>
+	已安装 AutoHotkey 的用法：<em>lintalist.ahk -Active</em>
+
+也可用配置项 <span class='setting'>ActivateWindow</span> 实现。
+
+<b>-Bundle=</b><i>filename.txt</i>：加载指定 Bundle 并锁定。
+
+<b>-Ini=</b><i>filename-for-settings.ini</i>：使用不同设置文件（默认 settings.ini）。
+
+<b>-ReadOnly</b>：只读模式启动，不允许编辑 Bundle、settings.ini、计数器和本地变量。Lintalist 搜索 GUI 标题与托盘提示中会添加 *。
+
+<b>-Administrator</b>：以管理员身份启动/重启 Lintalist。也可通过 Configuration 中的 Administrator 设置或托盘菜单使用。Lintalist 搜索 GUI 标题与托盘提示中会添加 <em>username</em>^。
+
+<h2 id='FAQ'><a href='#FAQ' class='headline'>F.A.<em>Q</em> 与已知<em>问题</em></a></h2>
+
+<h3>FAQ</h3>
+
+<a name='faq1'></a><b>Q1：</b>没有粘贴任何内容 / 只看到字母 v（或什么都没有）
+<b>A1：</b>你可能需要增加 <span class='setting'>PasteDelay</span>。右键托盘图标，Configuration，PasteDelay，增加毫秒数。可能需要多试几次找到合适值。
+
+<a name='faq2'></a><b>Q2：</b>仍然不工作！
+<b>A2：</b>可尝试不同 <span class='setting'>SendMethods</span>。共有 4 种：右键托盘图标，Configuration，SendMethod。逐个尝试，必要时与 PasteDelay 组合测试。Notepad 是很好的测试程序。
+
+<a name='faq3'></a><b>Q3：</b>我的编辑器在没有选中文本时也会选择整行。
+<b>A3：</b>有些编辑器在使用 [[selected]] 或脚本时，即使未选中任何内容，也会自动选择整行（甚至空行）。已知编辑器包括 UltraEdit（可在配置中关闭）、EditPad、Sublime Text 等。如果不能关闭该行为，请先选中文本再使用 Snippet，或从 Snippet 中移除 [[selected]]。
+
+<a name='faq4'></a><b>Q4：</b>我想做 OR 搜索，例如 “this OR that”，可以吗？
+<b>A4：</b>可以。选择 RgEx（正则表达式）搜索（Alt-R）并使用 | 管道符。例如 <code>this|that</code> 会找到文本（part1、part2、shorthand）中包含 THIS 或 THAT 的 Snippet。
+
+<a name='faq5'></a><b>Q5：</b>输入 shorthand 或按 shortcut 后没有反应！
+<b>A5：</b>
+- 确认 shortcuts 与 shorthand 未被禁用，Lintalist 也没有暂停。
+- 可能锁定了另一个 Bundle，导致你认为应激活的 Bundle 并未激活；请用工具栏按钮解锁。
+- 如果不是默认 Bundle，请确认该 Bundle 的 TitleMatch 设置正确。
+
+<h3>已知问题</h3>
+
+<a name='ki1'></a><b>K1：</b>无法向 Bundle 追加新 Snippet。
+<b>A1：</b>尝试 Reload Bundles 或重启 Lintalist。某些情况下 Lintalist 可能找不到或无法访问 Bundle，或丢失了应追加到哪个 Bundle 的状态。v1.9.5+ 后理论上不应再发生；若你遇到，尤其能复现，请报告。
+
+<a name='ki2'></a><b>K2：</b>Flash 编辑控件不总是可用。
+<b>A2：</b>Lintalist GUI 激活时 Flash 编辑控件会失去焦点。无法可靠检测并重新聚焦这类控件。如果经常遇到，可把 <span class='setting'>PasteMethod</span> 改为 1 或 2 后手动粘贴。
+
+<a name='ki3'></a><b>K3：</b>不能与 Windows Store 安装的程序配合。
+<b>A3：</b>这是已知情况，目前没有解决方案。你也可以尝试手动粘贴，见 <span class='setting'>PasteMethod</span> 设置，或使用 <b>PasteMethod</b> 热键。
+
+<h2 id='Expert'><a href='#Expert' class='headline'>专家</a></h2>
+
+<b><a href='#RunQuery' class='headline'>RunQuery</a></b>
+
+允许用户使用搜索框中的查询内容，启动用户自定义脚本，并把查询作为参数传递。
+
+settings.ini 中有三个隐藏选项：
+
+QueryAction：禁用/启用
+QueryHotkey：用于“run query”的热键
+QueryScript：要启动的脚本，查询会作为参数传给它。默认 RunQuery.ahk；如果启用 QueryAction 且未找到脚本，会创建一个占位脚本。
+
+<h2 id='Linux'><a href='#Linux' class='headline'>Linu<em>x</em></a></h2>
+
+看起来可以在 Linux 上运行 Lintalist，更多信息见 <a href='https://github.com/sl5net/Lintalist4Linux'>github.com/sl5net/Lintalist4Linux</a>（独立项目，未测试）。
+
+<h2 id='History'><a href='#History' class='headline'>历史</a></h2>
+
+<b>History</b>
+
+&gt; version 1.1 之后见 <a href='../changelog.md'>changelog.md</a>
+* Version 1.1 - 支持格式化文本。
+* Version 1.0.x - 小改进与 bug 修复。
+* Version 1.0 - 首次公开发布。
+&lt; Version 1.0 - 仅私有版本（少量用户）。
+* 另见 credits.txt（部分图标来自 Yusuke Kamiyamane、Silk icon set 等）。
+
+<span class='smalltext'>
+<img src='img/lintalist-title-footer.gif' alt='lintalist' align='left' style='margin-top:6px;padding-right:5px;' /><b>免责声明：</b>使用风险自负。如果你发现新的 Bundle，请查看每个 Snippet 的脚本部分。由于 Lintalist 可以运行任意 AutoHotkey 脚本，它也可能运行错误或不安全代码。请保持谨慎；如果只是想尝试某个 Bundle，通过托盘菜单选择 “Pause scripts” 可能是个好主意。
+</span>
+
+<span style='float:right;'>&copy; Copyright 2009-2026 Lintalist. See license.txt</span>
+</pre>
+
+<a href="https://github.com/lintalist"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
+</div>
+</body>
+</html>
